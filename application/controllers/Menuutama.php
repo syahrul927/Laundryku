@@ -11,8 +11,9 @@
             $this->load->model('Global_m');
         }
         public function index(){
+            $data['is_detail'] = true;
             $this->load->view('_part/header');
-            $this->load->view('menuutama_v');
+            $this->load->view('menuutama_v', $data);
             $this->load->view('_part/footer');
         }
         

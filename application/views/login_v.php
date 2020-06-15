@@ -2,8 +2,9 @@
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap.min.css') ?>">
+    <script src="<?php echo base_url('assets/js/bootstrap.min.js') ?>"></script>
     <meta charset="UTF-8">
 
     <link href="<?php echo base_url('assets/css/style-v1.css') ?>" rel="stylesheet">
@@ -16,7 +17,7 @@
         <div class="card mx-auto">
             <div class="card-body m-2">
                 <h5 class="card-title mb-5 ">Login LaundryKu</h5>
-                <form action="<?php echo base_url();?>Login/ceklogin" method="POST">
+                <form action="<?php echo base_url(); ?>Login/ceklogin" method="POST">
                     <div class="form-group">
                         <input type="text" required name="username" placeholder="Username" class="form-control">
                     </div>

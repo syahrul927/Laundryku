@@ -23,21 +23,19 @@ class Login extends CI_Controller {
 
 
 		$where = array(
-			'username' => $userid,
+			'kasirId' => $userid,
 			'password' => md5($password)
 		);
 
-		$datauser = $this->Global_m->cek_login_m('login', $where);
+		$datauser = $this->Global_m->cek_login_m('kasir', $where);
 
 		foreach ($datauser->result() as $dt) {
 			$nama	= $dt->nama;
-			$email  = $dt->email; 
 		}
 
 		if($datauser->num_rows()>0){
 			$data_session = array(
 					'nama'=>$nama,
-					'email' => $email,
 					'username' => $userid
 			);
 			$this->session->set_userdata($data_session);

@@ -1,20 +1,14 @@
- 
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<head>
+    <link href="<?php echo base_url('assets/css/style-v1.css') ?>" rel="stylesheet">
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap.min.css') ?>">
+    <script src="<?php echo base_url('assets/js/jquery-3.4.1.js') ?>"></script>
+    <script src="<?php echo base_url('assets/js/bootstrap.min.js') ?>"></script>
+    <link rel="stylesheet" href="<?php echo base_url('assets/font-awesome/css/font-awesome.min.css') ?>">
 
-    <title>Hello, world!</title>
-    <style type="text/css">
-        body{
-            color: white;
-            background-color: black;
-        }
-    </style>
-  </head>
-  <body>
-    
+    <title>Home Page LaundryKu</title>
+</head>
+
+<body>
