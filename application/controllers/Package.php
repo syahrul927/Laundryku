@@ -10,7 +10,10 @@ class Package extends ParentControllerAdmin
 
     function index()
     {
-        echo "index Package";
+        $this->load->view('_part/header');
+        $this->load->view('packageView');
+        $this->load->view('packageForm');
+        $this->load->view('_part/footer');
     }
     function show($detail = null, $id = null)
     {
