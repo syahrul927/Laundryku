@@ -13,56 +13,29 @@
     <div class="row content-body">
         <div class="col-sm">
             <div class="row ">
-                <div class="col-sm title-content"><span >Data Customer</span></div>
-                <!-- <div class="col-sm-5"><input type="text" name="" id="" placeholder="Search..." class="form-search">
-                    <button class="btn btn-primary btn-sm my-btn" data-toggle="modal" data-target="#exampleModal">Add New</button>
-                </div> -->
+                <div class="col-sm title-content"><span>Data Customer</span></div>
+                <div class="col-sm-5">
+                    <button class="btn btn-primary btn-sm my-btn add-btn" data-toggle="modal" data-target="#exampleModal">Add New</button>
+                </div>
             </div>
             <div class="row">
                 <table class="table my-table">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">First</th>
-                            <th scope="col">Last</th>
-                            <th scope="col">Handle</th>
+                            <th scope="col">No</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Telp</th>
+                            <th scope="col">Address</th>
                             <th scope="col">Tools</th>
                         </tr>
                     </thead>
                     <tbody class="my-tools">
-                        <tr>
-                            <td scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                            <td>
-                                <div class="btn-tools"><a href="#"><span class="fa fa-pencil-square-o"></span></a></div>&nbsp;<div class="btn-tools"><a href="#"><span class="fa fa-trash"></span></a>
-                                </div>
-                                <div class="btn-tools"><a href="#" data-id="1"><span class="fa fa-eye"></span></a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                            <td>
-                                <div class="btn-tools"><a href="#"><span class="fa fa-pencil-square-o"></span></a></div>&nbsp;<div class="btn-tools"><a href="#"><span class="fa fa-trash"></span></a>
-                                </div>
-                                <div class="btn-tools"><a href="#" data-id="3"><span class="fa fa-eye"></span></a></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td scope="row">3</th>
-                            <td>Larry</td>
-                            <td>the Bird</td>
-                            <td>@twitter</td>
-                            <td>
-                                <div class="btn-tools"><a href="#"><span class="fa fa-pencil-square-o"></span></a></div>&nbsp;<div class="btn-tools"><a href="#"><span class="fa fa-trash"></span></a>
-                                </div>
-                                <div class="btn-tools"><a href="#" data-id="3"><span class="fa fa-eye"></span></a></div>
-                            </td>
-                        </tr>
+                        <!-- <tr class="list-content"> -->
+                        <!-- <td scope="row" class="no">1</td>
+                            <td class="packageName">Mark</td>
+                            <td class="price">Otto</td>
+                            <td cllass="description">@mdo</td> -->
+                        <!-- </tr> -->
                     </tbody>
                 </table>
                 <div class="detail-customer">
@@ -177,14 +150,123 @@
 </div>
 
 <script>
-    $(document).ready(function(){
-        $('.my-table').DataTable();
+    $(document).ready(function() {
+        loadListTable()
     });
-    $('.btn-tools').click(function() {
-        $('.detail-customer').slideToggle("slow");
-    });
+
+    function afterSave(res) {
+        console.log(res)
+        loadListTable();
+    }
+
+    function appentToTable(i, o) {
+        var listContent = $('<tr></tr>');
+        var number = $('<td></td>').append(i + 1);
+        var name = $('<td></td>').append(o.name);
+        var telp = $('<td></td>').append(o.telp);
+        var address = $('<td></td>').append(o.address);
+        listContent.append(number);
+        listContent.append(name);
+        listContent.append(telp);
+        listContent.append(address);
+        listContent.append(
+            '<td class="tools">' +
+            '<div class="btn-tools btn-edit"><a href="#" data-id=' + o.customerId + ' data-toggle="modal" data-target="#exampleModal"><span class="fa fa-pencil-square-o"></span></a></div>&nbsp;' +
+            '<div class="btn-tools btn-delete"><a href="#" data-id=' + o.customerId + '><span class="fa fa-trash"></span></a>' +
+            '</div>' +
+            '<div class="btn-tools btn-view"><a href="#" data-id=' + o.customerId + '><span class="fa fa-eye"></span></a></div>' +
+            '</td>'
+        )
+        return listContent
+    }
+
+    function loadListTable() {
+        var urlListCustomer = "<?php echo base_url("customer/show") ?>";
+        $.get(urlListCustomer, function(result) {
+            // console.log(result.content)  
+            var data = result.content;
+            var tbody = $('.my-tools');
+            $(".my-tools tr").remove();
+            $.each(data, (i, o) => {
+                var listContent = appentToTable(i, o)
+
+                tbody.append(listContent);
+            })
+
+        }).done(() => {
+            $('.my-table').DataTable();
+            $('.btn-view a').click(function() {
+                var customerId = $(this).data('id')
+                $('.detail-customer').append("<h1>" + customerId + "</h1>").slideToggle("slow");
+            });
+            $('.btn-delete a').click(function() {
+                var p = $(this).data('id')
+                var urlDelete = "<?php echo base_url("customer/delete") ?>"
+                var data = {
+                    customerId: p
+                }
+                swal({
+                        title: "Anda yakin ingin menghapus?",
+                        text: "Sekali dihapus tidak dapat di kembalikan",
+                        icon: "warning",
+                        buttons: true,
+                        showLoaderOnConfirm:true,
+                        dangerMode: true,
+                    })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            swal({
+                                text: 'Silahkan tunggu..!',
+                                allowOutsideClick: false,
+                                closeOnEsc: false,
+                                allowEnterKey: false,
+                                timerProgressBar: true,
+                                button:false,
+                                onOpen: () => {
+                                    swal.showLoading()
+                                }
+                            })
+                            $.post(urlDelete, data).done((res) => {
+                                swal.stopLoading()
+                                if (res) {
+                                    if (res.success) {
+                                        swal("Berhasil Menghapus", {
+                                            icon: "success",
+                                        });
+                                        loadListTable()
+                                    } else {
+                                        swal("Failed", res.message, "error");
+                                    }
+
+                                }
+                            })
+                        } else {
+                            swal("Batal menghapus");
+                        }
+                    });
+
+                closeForm()
+                
+            })
+            $('.btn-edit a').click(function() {
+                var p = $(this).data('id')
+                $.get(urlListCustomer + "/detail/" + p, function(result) {
+                    if (result.status === 200) {
+                        setupForm(result.content);
+                    } else {
+                        swal("Error", "Oops Something is wrong, please reload the page!", "error").then((e)=>{
+                            location.reload()
+                        })
+
+                    }
+                })
+
+            })
+        })
+    }
+
     $('#btn-table-rows').click(function(event) {
-        console.log();
+        // console.log();
         var values = [];
         $('table #row-selector:checked').each(function() {
             var rowValue = $(this).closest('tr').find('td.row-value').text();
@@ -195,6 +277,7 @@
 
         alert(json);
     });
+
     $(document).on("click", ".modifyRecord", function() {
         var myBookId = $(this).data('id');
         console.log(myBookId);

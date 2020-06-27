@@ -4,12 +4,15 @@
 <head>
     <link href="<?php echo base_url('assets/css/style-v1.css') ?>" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap.min.css') ?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrapValidator.css') ?>">
     <link rel="stylesheet" href="<?php echo base_url('assets/css/dataTables.bootstrap4.min.css') ?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/font-awesome/css/font-awesome.min.css') ?>">
     <script src="<?php echo base_url('assets/js/jquery-3.5.1.js') ?>"></script>
     <script src="<?php echo base_url('assets/js/bootstrap.min.js') ?>"></script>
+    <script src="<?php echo base_url('assets/js/bootstrapValidator.js') ?>"></script>
     <script src="<?php echo base_url('assets/js/jquery.dataTables.min.js') ?>"></script>
     <script src="<?php echo base_url('assets/js/dataTables.bootstrap4.min.js') ?>"></script>
-    <link rel="stylesheet" href="<?php echo base_url('assets/font-awesome/css/font-awesome.min.css') ?>">
+    <script src="<?php echo base_url('assets/js/sweetalert.min.js') ?>"></script>
 
     <title>Home Page LaundryKu</title>
 </head>
@@ -28,13 +31,13 @@
                             <div class="nav-menu"><a href="#" class="feat-btn"><span class="fa fa-database" aria-hidden="true"></span>Master</a></div>
                             <ul class="feat-show">
                                 <li>
-                                    <div class="nav-menu"><a href="#">Customer</a></div>
+                                    <div class="nav-menu"><a href="<?php echo base_url("customer")?>">Customer</a></div>
                                 </li>
                                 <li>
-                                    <div class="nav-menu"><a href="#">User</a></div>
+                                    <div class="nav-menu"><a href="<?php echo base_url("package")?>">Package</a></div>
                                 </li>
                                 <li>
-                                    <div class="nav-menu"><a href="#">Package</a></div>
+                                    <div class="nav-menu"><a href="#">User Admin</a></div>
                                 </li>
                             </ul>
                         </li>

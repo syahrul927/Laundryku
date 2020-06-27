@@ -20,6 +20,12 @@ $gray-color:#989898;
     font-family: 'Roboto', sans-serif;
     overflow-y: auto;
     overflow-x: hidden;
+    
+}
+.swal-modal *{
+    overflow-y: unset!important;
+    overflow-x: unset!important;
+
 }
 a{
     outline: none;
@@ -61,6 +67,9 @@ a{
         background-color: $semi-white;
     }
     td{
+        text-overflow: ellipsis;
+        max-width: 40px;
+        white-space:nowrap;
         color: black;
         font-weight: 200;
     }
@@ -72,6 +81,11 @@ a{
 }
 .title-content{
     font-weight: 200;
+}
+.add-btn{
+    right: 20px;
+    top:15px;
+    position: absolute!important;
 }
 .btn{
     
@@ -302,4 +316,8 @@ nav ul{
             } 
         }
     }
+}
+
+.dataTables_wrapper {
+    padding-bottom: 20px;
 }

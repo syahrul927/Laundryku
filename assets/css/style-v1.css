@@ -15,6 +15,11 @@
   overflow-x: hidden;
 }
 
+.swal-modal * {
+  overflow-y: unset !important;
+  overflow-x: unset !important;
+}
+
 a {
   outline: none;
 }
@@ -68,6 +73,9 @@ a {
 }
 
 .my-table td {
+  text-overflow: ellipsis;
+  max-width: 40px;
+  white-space: nowrap;
   color: black;
   font-weight: 200;
 }
@@ -78,6 +86,12 @@ a {
 
 .title-content {
   font-weight: 200;
+}
+
+.add-btn {
+  right: 20px;
+  top: 15px;
+  position: absolute !important;
 }
 
 .btn {
@@ -354,5 +368,9 @@ nav ul li ul {
 
 nav ul li ul li {
   margin-left: 30px;
+}
+
+.dataTables_wrapper {
+  padding-bottom: 20px;
 }
 /*# sourceMappingURL=style-v1.css.map */

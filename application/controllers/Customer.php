@@ -1,18 +1,19 @@
 <?php
+
 require_once "ParentControllerAdmin.php";
-class Package extends ParentControllerAdmin
-{
-    function __construct()
+    class Customer extends ParentControllerAdmin
+    {
+        function __construct()
     {
         parent::__construct();
-        $this->load->model("PackageModel");
+        $this->load->model("CustomerModel");
     }
 
     function index()
     {
         $this->load->view('_part/header');
-        $this->load->view('package/packageView');
-        $this->load->view('package/packageForm');
+        $this->load->view('customer/customerView');
+        $this->load->view('customer/customerForm');
         $this->load->view('_part/footer');
     }
     function show($detail = null, $id = null)
@@ -27,12 +28,12 @@ class Package extends ParentControllerAdmin
                 $responseDto->setSuccess(false);
                 $this->responseBuilder($responseDto);
             }
-            $responseDto->setContent($this->PackageModel->getDetailPackageById($id));
+            $responseDto->setContent($this->CustomerModel->getDetailCustomerById($id));
             $responseDto->setSuccess(true);
             $this->responseBuilder($responseDto);
         } else {
             $responseDto->setSuccess(true);
-            $responseDto->setContent($this->PackageModel->getListPackage());
+            $responseDto->setContent($this->CustomerModel->getListCustomer());
             $this->responseBuilder($responseDto);
         }
     }
@@ -41,9 +42,9 @@ class Package extends ParentControllerAdmin
         $this->output
             ->set_content_type('application/json');
         $responseDto = new ResponseController();
-        if (isset($_POST['name']) && isset($_POST['price']) && isset($_POST['description'])) {
+        if (isset($_POST['name']) && isset($_POST['address']) && isset($_POST['telp'])) {
             $param = $this->postToDto();
-            $res = $this->PackageModel->savePackage($param);
+            $res = $this->CustomerModel->saveCustomer($param);
             if ($res == null) {
                 $responseDto->setSuccess(false);
                 $responseDto->setStatus(500);
@@ -61,12 +62,12 @@ class Package extends ParentControllerAdmin
         $this->output
             ->set_content_type('application/json');
         $responseDto = new ResponseController();
-        if(empty($_POST['packageId'])){
+        if(empty($_POST['customerId'])){
             $responseDto->setStatus(400);
             $this->responseBuilder($responseDto);
         }
         $dto =  $this->postToDto(); 
-        $res = $this->PackageModel->updatePackage($dto);
+        $res = $this->CustomerModel->updateCustomer($dto);
         if ($res == null) {
             $responseDto->setSuccess(false);
             $responseDto->setStatus(500);
@@ -83,8 +84,8 @@ class Package extends ParentControllerAdmin
             ->set_content_type('application/json');
 
         $responseDto = new ResponseController();
-        if (isset($_POST['packageId'])) {
-            $responseDto->setSuccess($this->PackageModel->deletePackageById($_POST['packageId']));
+        if (isset($_POST['customerId'])) {
+            $responseDto->setSuccess($this->CustomerModel->deleteCustomerById($_POST['customerId']));
         } else {
             $responseDto->setSuccess(false);
             $responseDto->setStatus(400);
@@ -107,13 +108,15 @@ class Package extends ParentControllerAdmin
 
     function postToDto()
     {
-        $param = new $this->PackageModel();
-        if (isset($_POST['packageId'])) {
-            $param->setPackageId($_POST['packageId']);
+        $param = new $this->CustomerModel();
+        if (isset($_POST['customerId'])) {
+            $param->setCustomerId($_POST['customerId']);
         }
         $param->setName($_POST['name']);
-        $param->setPrice($_POST['price']);
-        $param->setDescription($_POST['description']);
+        $param->setAddress($_POST['address']);
+        $param->setTelp($_POST['telp']);
         return $param;
     }
-}
+    }
+    
+?>
