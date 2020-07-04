@@ -44,12 +44,10 @@
                         <span class="detail-title">Transaction</span>
                     </div>
                     <div class="row">
-                        <div class="col-sm4">
+                        <div class="col-sm8">
                             <div class="sub-menu active">
                                 <span class="title">History</span>
                             </div>
-                        </div>
-                        <div class="col-sm4">
                             <div class="sub-menu">
                                 <span class="title">Ongoing</span>
                             </div>
@@ -59,86 +57,122 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="history-content">
-                            <!-- one day one record -->
-                            <div class="row">
-                                <div class="history-header">
-                                    <span>13 Jun 2020</span>
-                                </div>
-                            </div>
-                            <div class="row trans-detail">
-                                <div class="col-md1">
-                                    <span class="fa fa-hourglass-start"></span>
-                                </div>
-                                <div class="col-md6">
-                                    <div class="package">
-                                        Paket Baju Ringan
-                                    </div>
-                                    <div class="date-time">
-                                        13 Jun 2020 at 10:40
+                        <div class="detail-content">
+                            <div class="history-content">
+                                <!-- one day one record -->
+                                <div class="row">
+                                    <div class="history-header">
+                                        <span>13 Jun 2020</span>
                                     </div>
                                 </div>
-                                <div class="col-md3 history-delivery">
-                                    <span>Not Delivery</span>
-                                </div>
-                                <div class="col-md1">
-                                    x1
-                                </div>
-                                <div class="col-md1 cash">
-                                    Rp 15.000
+                                <div class="row trans-detail">
+                                    <div class="col-md1">
+                                        <span class="fa fa-hourglass-start"></span>
+                                    </div>
+                                    <div class="col-md6">
+                                        <div class="package">
+                                            Paket Baju Ringan
+                                        </div>
+                                        <div class="date-time">
+                                            13 Jun 2020 at 10:40
+                                        </div>
+                                    </div>
+                                    <div class="col-md3 history-delivery">
+                                        <span>Not Delivery</span>
+                                    </div>
+                                    <div class="col-md1">
+                                        x1
+                                    </div>
+                                    <div class="col-md1 cash">
+                                        Rp 15.000
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="history-content">
-                            <!-- one day two record -->
-                            <div class="row">
-                                <div class="history-header">
-                                    <span>01 Jun 2020</span>
+                        </div>
+                        
+                        <div class="detail-content">
+                            <div class="history-content">
+                                <!-- one day one record -->
+                                <div class="row">
+                                    <div class="history-header">
+                                        <span>13 Jun 2020</span>
+                                    </div>
+                                </div>
+                                <div class="row trans-detail">
+                                    <div class="col-md1">
+                                        <span class="fa fa-hourglass-start"></span>
+                                    </div>
+                                    <div class="col-md6">
+                                        <div class="package">
+                                            Paket Baju Ringan
+                                        </div>
+                                        <div class="date-time">
+                                            13 Jun 2020 at 10:40
+                                        </div>
+                                    </div>
+                                    <div class="col-md3 history-delivery">
+                                        <span>Not Delivery</span>
+                                    </div>
+                                    <div class="col-md1">
+                                        x1
+                                    </div>
+                                    <div class="col-md1 cash">
+                                        Rp 15.000
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row trans-detail">
-                                <div class="col-md1">
-                                    <span class="fa fa-hourglass-start"></span>
-                                </div>
-                                <div class="col-md6">
-                                    <div class="package">
-                                        Kain Besar
-                                    </div>
-                                    <div class="date-time">
-                                        01 Jun 2020 at 10:40
+
+                            <div class="history-content">
+                                <!-- one day two record -->
+                                <div class="row">
+                                    <div class="history-header">
+                                        <span>01 Jun 2020</span>
                                     </div>
                                 </div>
-                                <div class="col-md3 history-delivery">
-                                    <span>Not Delivery</span>
-                                </div>
-                                <div class="col-md1">
-                                    x1
-                                </div>
-                                <div class="col-md1 cash">
-                                    Rp 24.000
-                                </div>
-                            </div>
-                            <div class="row trans-detail">
-                                <div class="col-md1">
-                                    <span class="fa fa-hourglass-start"></span>
-                                </div>
-                                <div class="col-md6">
-                                    <div class="package">
-                                        Pakaian Biasa
+                                <div class="row trans-detail">
+                                    <div class="col-md1">
+                                        <span class="fa fa-hourglass-start"></span>
                                     </div>
-                                    <div class="date-time">
-                                        01 Jun 2020 at 15:45
+                                    <div class="col-md6">
+                                        <div class="package">
+                                            Kain Besar
+                                        </div>
+                                        <div class="date-time">
+                                            01 Jun 2020 at 10:40
+                                        </div>
+                                    </div>
+                                    <div class="col-md3 history-delivery">
+                                        <span>Not Delivery</span>
+                                    </div>
+                                    <div class="col-md1">
+                                        x1
+                                    </div>
+                                    <div class="col-md1 cash">
+                                        Rp 24.000
                                     </div>
                                 </div>
-                                <div class="col-md3 history-delivery">
-                                    <span>Not Delivery</span>
-                                </div>
-                                <div class="col-md1">
-                                    x2
-                                </div>
-                                <div class="col-md1 cash">
-                                    Rp 30.000
+                                <div class="row trans-detail">
+                                    <div class="col-md1">
+                                        <span class="fa fa-hourglass-start"></span>
+                                    </div>
+                                    <div class="col-md6">
+                                        <div class="package">
+                                            Pakaian Biasa
+                                        </div>
+                                        <div class="date-time">
+                                            01 Jun 2020 at 15:45
+                                        </div>
+                                    </div>
+                                    <div class="col-md3 history-delivery">
+                                        <span>Not Delivery</span>
+                                    </div>
+                                    <div class="col-md1">
+                                        x2
+                                    </div>
+                                    <div class="col-md1 cash">
+                                        Rp 30.000
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -162,7 +196,7 @@
     function appentToTable(i, o) {
         var listContent = $('<tr></tr>');
         var number = $('<td></td>').append(i + 1);
-        var name = $('<td></td>').append(o.name);
+        var name = $('<td></td>').append(o.packageName);
         var price = $('<td></td>').append(o.price);
         var description = $('<td></td>').append(o.description);
         listContent.append(number);
@@ -197,7 +231,8 @@
             $('.my-table').DataTable();
             $('.btn-view a').click(function() {
                 var packageId = $(this).data('id')
-                $('.detail-customer').append("<h1>" + packageId + "</h1>").slideToggle("slow");
+                    $('.detail-customer').append("<h1>" + packageId + "</h1>").slideToggle("slow");
+                
             });
             $('.btn-delete a').click(function() {
                 var p = $(this).data('id')
@@ -210,7 +245,7 @@
                         text: "Sekali dihapus tidak dapat di kembalikan",
                         icon: "warning",
                         buttons: true,
-                        showLoaderOnConfirm:true,
+                        showLoaderOnConfirm: true,
                         dangerMode: true,
                     })
                     .then((willDelete) => {
@@ -221,7 +256,7 @@
                                 closeOnEsc: false,
                                 allowEnterKey: false,
                                 timerProgressBar: true,
-                                button:false,
+                                button: false,
                                 onOpen: () => {
                                     swal.showLoading()
                                 }
@@ -246,7 +281,7 @@
                     });
 
                 closeForm()
-                
+
             })
             $('.btn-edit a').click(function() {
                 var p = $(this).data('id')
@@ -254,7 +289,7 @@
                     if (result.status === 200) {
                         setupForm(result.content);
                     } else {
-                        swal("Error", "Oops Something is wrong, please reload the page!", "error").then((e)=>{
+                        swal("Error", "Oops Something is wrong, please reload the page!", "error").then((e) => {
                             location.reload()
                         })
 

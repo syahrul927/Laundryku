@@ -36,7 +36,14 @@
 </div>
 
 <script>
-    $('#save-btn').click(function() {
+
+$(document).ready(function(){
+        $('#exampleModal').on('hide.bs.modal', function(e) {
+            $('form').find('input[type=text], input[type=password], input[type=number], input[type=email], textarea').val('');
+            $('#my-form').bootstrapValidator('resetForm', true);
+        })
+    })
+$('#save-btn').click(function() {
         if ($("#my-form")[0].checkValidity()) {
             //loading
             swal({
@@ -81,12 +88,6 @@
         }
     })
 
-    function closeForm() {
-        $('#exampleModal').on('hide.bs.modal', function(e) {
-            $('form').find('input[type=text], input[type=password], input[type=number], input[type=email], textarea').val('');
-            $('#my-form').bootstrapValidator('resetForm', true);
-        })
-    };
 
     function setupForm(content) {
         // console.log(content.name)

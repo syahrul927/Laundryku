@@ -217,6 +217,8 @@ a {
 .col-content .content-body .col-sm .row .detail-customer .row .sub-menu {
   margin-right: 20px;
   font-weight: 300;
+  display: inline-block;
+  cursor: pointer;
 }
 
 .col-content .content-body .col-sm .row .detail-customer .row .active {
@@ -234,36 +236,46 @@ a {
   right: 15px;
 }
 
-.history-content {
+.detail-content {
+  display: none;
+  -webkit-transition: visibility 1s, opacity 0.5s linear;
+  transition: visibility 1s, opacity 0.5s linear;
   width: 100%;
 }
 
-.history-content .row .history-header {
+.detail-content .history-content, .detail-content .ongoing-content {
+  width: 100%;
+}
+
+.detail-content .history-content .row .history-header, .detail-content .ongoing-content .row .history-header {
   font-size: 13px;
   color: #989898;
   font-weight: 300;
 }
 
-.history-content .trans-detail {
+.detail-content .history-content .trans-detail, .detail-content .ongoing-content .trans-detail {
   line-height: 20px !important;
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
+  -ms-flex-line-pack: start;
+      align-content: flex-start;
   font-size: 14px;
+  padding: 15px;
 }
 
-.history-content .trans-detail .package {
+.detail-content .history-content .trans-detail .package, .detail-content .ongoing-content .trans-detail .package {
   font-weight: bold;
   font-size: 15px;
 }
 
-.history-content .trans-detail .date-time {
+.detail-content .history-content .trans-detail .date-time, .detail-content .ongoing-content .trans-detail .date-time {
   font-size: 13px;
   color: #989898;
   font-weight: 300;
 }
 
-.history-content .trans-detail .cash {
+.detail-content .history-content .trans-detail .cash, .detail-content .ongoing-content .trans-detail .cash {
   font-weight: bold;
 }
 
@@ -372,5 +384,36 @@ nav ul li ul li {
 
 .dataTables_wrapper {
   padding-bottom: 20px;
+}
+
+.action-ongoing {
+  padding: 5px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.action-ongoing:hover .action-ongoing-menu {
+  display: block;
+}
+
+.action-ongoing-menu {
+  display: none;
+  position: -webkit-sticky;
+  position: sticky;
+  padding-right: 5px;
+}
+
+.action-ongoing-menu a {
+  padding: 4px;
+  border-radius: 4px;
+  color: black;
+  text-decoration: none !important;
+  display: block;
+  text-align: left;
+}
+
+.action-ongoing-menu a:hover {
+  background-color: #ddd;
 }
 /*# sourceMappingURL=style-v1.css.map */

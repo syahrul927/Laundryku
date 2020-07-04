@@ -13,7 +13,7 @@ class PackageModel extends CI_Model
 
 
     private $packageId;
-    private $name;
+    private $packageName;
     private $description;
     private $price;
 
@@ -62,7 +62,7 @@ class PackageModel extends CI_Model
     private function arrayBuilder(PackageModel $req){
         $data = array(
             "packageId"=>$req->packageId,
-            "name"=>$req->name,
+            "packageName"=>$req->packageName,
             "description"=>$req->description,
             "price"=>$req->price 
         );
@@ -94,7 +94,7 @@ class PackageModel extends CI_Model
      */ 
     public function getName()
     {
-        return $this->name;
+        return $this->packageName;
     }
 
     /**
@@ -104,7 +104,7 @@ class PackageModel extends CI_Model
      */ 
     public function setName($name)
     {
-        $this->name = $name;
+        $this->packageName = $name;
 
         return $this;
     }

@@ -39,7 +39,7 @@ class Login extends CI_Controller {
 					'username' => $userid
 			);
 			$this->session->set_userdata($data_session);
-			redirect(base_url('menuutama'));
+			redirect(base_url('customer'));
 		}
 		else{
 			?>

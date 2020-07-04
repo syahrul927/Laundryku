@@ -9,8 +9,8 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    
-                <input type="text" value="" id="packageId-field" name="packageId-field" hidden>
+
+                    <input type="text" value="" id="packageId-field" name="packageId-field" hidden>
                     <div class="form-group">
                         <span>Name</span>
                         <input type="text" value="" id="name-field" name="name-field" placeholder="name" class="form-control" required>
@@ -36,6 +36,12 @@
 </div>
 
 <script>
+    $(document).ready(function(){
+        $('#exampleModal').on('hide.bs.modal', function(e) {
+            $('form').find('input[type=text], input[type=password], input[type=number], input[type=email], textarea').val('');
+            $('#my-form').bootstrapValidator('resetForm', true);
+        })
+    })
     $('#save-btn').click(function() {
         if ($("#my-form")[0].checkValidity()) {
             //loading
@@ -45,18 +51,18 @@
                 allowEscapeKey: false,
                 allowEnterKey: false,
                 timerProgressBar: true,
-                button:false,
+                button: false,
                 onOpen: () => {
                     swal.showLoading()
                 }
             })
             var id = $('#packageId-field').val()
             var urlSavePackage = '';
-           if(id!==null &&id!==''){
-            urlSavePackage = "<?php echo base_url("package/update") ?>"
-           }else{
-            urlSavePackage = "<?php echo base_url("package/save") ?>"
-           }
+            if (id !== null && id !== '') {
+                urlSavePackage = "<?php echo base_url("package/update") ?>"
+            } else {
+                urlSavePackage = "<?php echo base_url("package/save") ?>"
+            }
             var data = {
                 packageId: id,
                 name: $('#name-field').val(),
@@ -65,14 +71,14 @@
             }
             $.post(urlSavePackage, data).done((res) => {
                 // console.log(res)
-                if (res.status===200) {
+                if (res.status === 200) {
                     swal("Success", "Berhasil Menambahkan Data", "success");
                     $('#exampleModal').modal('hide')
                     afterSave(res.content)
                 } else {
                     swal("Oops!!", "Terjadi kesalahan pada server", "error");
                 }
-            }).done(()=>{
+            }).done(() => {
                 swal.stopLoading()
                 closeForm()
             })
@@ -81,16 +87,11 @@
         }
     })
 
-    function closeForm() {
-        $('#exampleModal').on('hide.bs.modal', function(e) {
-            $('form').find('input[type=text], input[type=password], input[type=number], input[type=email], textarea').val('');
-            $('#my-form').bootstrapValidator('resetForm', true);
-        })
-    };
-    function setupForm(content){
+
+    function setupForm(content) {
         // console.log(content.name)
         $('#packageId-field').val(content.packageId)
-        $('#name-field').val(content.name)
+        $('#name-field').val(content.packageName)
         $('#price-field').val(content.price)
         $('#description-field').val(content.description)
     }
