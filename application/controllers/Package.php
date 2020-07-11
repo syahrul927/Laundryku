@@ -38,11 +38,13 @@ class Package extends ParentControllerAdmin
     }
     function save()
     {
+        $req =  $this->requestBuilder();
+        
         $this->output
             ->set_content_type('application/json');
         $responseDto = new ResponseController();
-        if (isset($_POST['name']) && isset($_POST['price']) && isset($_POST['description'])) {
-            $param = $this->postToDto();
+        if (null != $req['name'] && null != $req['price'] && null != $req['description']) {
+            $param = $this->postToDto($req);
             $res = $this->PackageModel->savePackage($param);
             if ($res == null) {
                 $responseDto->setSuccess(false);
@@ -58,14 +60,15 @@ class Package extends ParentControllerAdmin
 
     function update()
     {
+        $req =  $this->requestBuilder();
         $this->output
             ->set_content_type('application/json');
         $responseDto = new ResponseController();
-        if(empty($_POST['packageId'])){
+        if(empty($req['packageId'])){
             $responseDto->setStatus(400);
             $this->responseBuilder($responseDto);
         }
-        $dto =  $this->postToDto(); 
+        $dto =  $this->postToDto($req); 
         $res = $this->PackageModel->updatePackage($dto);
         if ($res == null) {
             $responseDto->setSuccess(false);
@@ -79,21 +82,18 @@ class Package extends ParentControllerAdmin
     }
     function delete()
     {
+        $req =  $this->requestBuilder();
         $this->output
             ->set_content_type('application/json');
 
         $responseDto = new ResponseController();
-        if (isset($_POST['packageId'])) {
-            $responseDto->setSuccess($this->PackageModel->deletePackageById($_POST['packageId']));
+        if (isset($req['packageId'])) {
+            $responseDto->setSuccess($this->PackageModel->deletePackageById($req['packageId']));
         } else {
             $responseDto->setSuccess(false);
             $responseDto->setStatus(400);
         }
         $this->responseBuilder($responseDto);
-    }
-    function logout()
-    {
-        session_destroy();
     }
 
     private function responseBuilder($responseDto)
@@ -105,15 +105,16 @@ class Package extends ParentControllerAdmin
             ->set_output(json_encode($responseDto));
     }
 
-    function postToDto()
+    function postToDto($req)
     {
         $param = new $this->PackageModel();
-        if (isset($_POST['packageId'])) {
-            $param->setPackageId($_POST['packageId']);
+        if (isset($req['packageId'])) {
+            $param->setPackageId($req['packageId']);
         }
-        $param->setName($_POST['name']);
-        $param->setPrice($_POST['price']);
-        $param->setDescription($_POST['description']);
+        $param->setName($req['name']);
+        $param->setPrice($req['price']);
+        $param->setDescription($req['description']);
         return $param;
     }
+
 }

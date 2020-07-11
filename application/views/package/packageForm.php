@@ -69,18 +69,18 @@
                 price: $('#price-field').val(),
                 description: $('#description-field').val()
             }
-            $.post(urlSavePackage, data).done((res) => {
+            $.post(urlSavePackage, JSON.stringify(data), null, "json").done((res) => {
                 // console.log(res)
+                console.log("palplapla")
                 if (res.status === 200) {
                     swal("Success", "Berhasil Menambahkan Data", "success");
                     $('#exampleModal').modal('hide')
                     afterSave(res.content)
                 } else {
-                    swal("Oops!!", "Terjadi kesalahan pada server", "error");
+                    swal("Oops!!", res.responseJSON.nessage, "error");
                 }
             }).done(() => {
                 swal.stopLoading()
-                closeForm()
             })
         } else {
             $("#my-form")[0].reportValidity();

@@ -17,7 +17,7 @@
         <div class="card mx-auto">
             <div class="card-body m-2">
                 <h5 class="card-title mb-5 ">Login LaundryKu</h5>
-                <form action="<?php echo base_url(); ?>Login/ceklogin" method="POST">
+                <form action="<?php echo base_url("account/ceklogin"); ?>" method="POST">
                     <div class="form-group">
                         <input type="text" required name="username" placeholder="Username" class="form-control">
                     </div>

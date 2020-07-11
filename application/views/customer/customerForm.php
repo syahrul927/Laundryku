@@ -1,4 +1,4 @@
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <form id="my-form" role="form">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -20,8 +20,8 @@
                         <textarea name="address-field" id="address-field" cols="30" class="form-control" placeholder="alamat" rows="10" required></textarea>
                     </div>
                     <div class="form-group">
-                        <span>Address</span>
-                        <input type="text" value="" id="telp-field" name="telp-field" placeholder="telp" class="form-control" required>
+                        <span>Phone Number</span>
+                        <input type="text" value="" id="telp-field" name="telp-field" placeholder="phone number" class="form-control" required>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -38,7 +38,8 @@
 <script>
 
 $(document).ready(function(){
-        $('#exampleModal').on('hide.bs.modal', function(e) {
+    $('#exampleModal').on('hide.bs.modal', function(e) {
+    $(this).prop('disable', false)
             $('form').find('input[type=text], input[type=password], input[type=number], input[type=email], textarea').val('');
             $('#my-form').bootstrapValidator('resetForm', true);
         })
@@ -70,18 +71,17 @@ $('#save-btn').click(function() {
                 address: $('#address-field').val(),
                 telp: $('#telp-field').val()
             }
-            $.post(urlSaveCustomer, data).done((res) => {
+            $.post(urlSaveCustomer, JSON.stringify(data), null, "json").done((res) => {
                 // console.log(res)
                 if (res.status === 200) {
                     swal("Success", "Berhasil Menambahkan Data", "success");
                     $('#exampleModal').modal('hide')
-                    afterSave(res.content)
+                    afterSave()
                 } else {
                     swal("Oops!!", "Terjadi kesalahan pada server", "error");
                 }
             }).done(() => {
                 swal.stopLoading()
-                closeForm()
             })
         } else {
             $("#my-form")[0].reportValidity();

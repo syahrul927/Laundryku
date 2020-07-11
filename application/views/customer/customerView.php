@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class="row content-body">
-        <div class="col-sm">
+        <div class="col-sm card-container">
             <div class="row ">
                 <div class="col-sm title-content"><span>Data Customer</span></div>
                 <div class="col-sm-5">
@@ -53,48 +53,49 @@
                             </div>
                         </div>
                         <div class="col-sm4">
-                            <button class="btn btn-primary btn-sm my-btn">&nbsp; + &nbsp;</button>
+                            <button class="btn btn-primary btn-sm my-btn" data-toggle="modal" data-target="#modalTransaction">&nbsp; + &nbsp;</button>
                         </div>
                     </div>
 
                     <div class="row">
+                        <!-- dummy list, it will change when hit api get result -->
                         <div class="detail-content" id="detail-ongoing-container">
                             <div class="ongoing-content" id="ongoing-content">
                                 <!-- one day one record -->
                                 <div class="row">
                                     <div class="history-header" id="ongoing-header">
-                                        <span id="title-header-ongoing">13 Jun 2020</span>
+                                        <span id="title-header-ongoing">20 Jun 2020</span>
                                     </div>
                                 </div>
                                 <div class="row trans-detail">
-                                    <div class="col-md1">
-                                        <span class="fa" id="status-code-icon"></span>
+                                    <div class="col">
+                                        <span class="fa" id="status-code-icon-ongoing"></span>
                                     </div>
-                                    <div class="col-md4">
+                                    <div class="col">
                                         <div class="package">
-                                            PAKET ANJING
+                                            PAKET NYUCI
                                         </div>
                                         <div class="date-time">
-                                            13 Jun 2020 at 10:40
+                                            05 Jun 2020 at 10:40
                                         </div>
                                     </div>
-                                    <div class="col-md3 history-delivery">
+                                    <div class="col history-delivery">
                                         <span id="ongoing-delivery">Not Delivery</span>
                                     </div>
-                                    <div class="col-md1" id="qty">
+                                    <div class="col" id="qty">
                                         x1
                                     </div>
-                                    <div class="col-md1 cash">
+                                    <div class="col cash">
                                         Rp 15.000
                                     </div>
-                                    <div class="col-md2">
-                                        <div class="action-ongoing">
-                                            <div class="action-ongoing-menu">
-                                                <a href="#">Done</a>
-                                                <a href="#">Delivery</a>
-                                                <a href="#">Finish</a>
-                                            </div>
-                                            <span class="fa fa-ellipsis-v"></span>
+                                    <div class="col-md1 " id="option-order">
+                                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fa  fa-fw"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                                            <a data-id="" data-status="20" class="dropdown-item actionStatusTrans statusDone" href="#"  onclick="actionStatus(this)">Done</a>
+                                            <a data-id="" data-status="30" class="dropdown-item actionStatusTrans statusDelivery" href="#"  onclick="actionStatus(this)">Delivery</a>
+                                            <a data-id="" data-status="40" class="dropdown-item actionStatusTrans statusFinish" href="#" onclick="actionStatus(this)">Finish</a>
                                         </div>
                                     </div>
                                 </div>
@@ -102,21 +103,21 @@
 
                         </div>
 
-                        <div class="detail-content" id="detail-history">
-                            <div class="history-content">
+                        <div class="detail-content" id="detail-history-container">
+                            <div class="history-content" id="history-content">
                                 <!-- one day one record -->
                                 <div class="row">
-                                    <div class="history-header">
-                                        <span class="">13 Jun 2020</span>
+                                    <div class="history-header" id="history-header">
+                                        <span id="title-header-history">13 Jun 2020</span>
                                     </div>
                                 </div>
                                 <div class="row trans-detail">
                                     <div class="col-md1">
-                                        <span class="fa fa-check"></span>
+                                        <span class="fa" id="status-code-icon-history"></span>
                                     </div>
                                     <div class="col-md6">
                                         <div class="package">
-                                            Paket Baju Ringan
+                                            Paket GOSOK BAJU
                                         </div>
                                         <div class="date-time">
                                             13 Jun 2020 at 10:40
@@ -134,8 +135,7 @@
                                 </div>
                             </div>
 
-                            <div class="history-content">
-                                <!-- one day two record -->
+                            <!-- <div class="history-content">
                                 <div class="row">
                                     <div class="history-header">
                                         <span>01 Jun 2020</span>
@@ -185,7 +185,7 @@
                                         Rp 30.000
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -195,16 +195,65 @@
 </div>
 
 <script>
+    function actionStatus(e) {
+        var urlUpdateStatus = "<?php echo base_url("transaction/update/status") ?>"
+        var data = {
+            orderId: $(e).data('orderId'),
+            statusCode: $(e).data('status')
+        }
+        swal({
+                title: "Anda yakin ingin mengupdate status menjadi " + $(e).text() + "?",
+                icon: "warning",
+                buttons: true,
+                showLoaderOnConfirm: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    swal({
+                        text: 'Silahkan tunggu..!',
+                        allowOutsideClick: false,
+                        closeOnEsc: false,
+                        allowEnterKey: false,
+                        timerProgressBar: true,
+                        button: false,
+                        onOpen: () => {
+                            swal.showLoading()
+                        }
+                    })
+                    $.post(urlUpdateStatus, JSON.stringify(data), null, "json").done((res) => {
+                        swal.stopLoading()
+                        if (res) {
+                            if (res.success) {
+                                swal("Berhasil Mengupdate", {
+                                    icon: "success",
+                                });
+                                setupDetailCustomer($(e).data('customerId'))
+                            } else {
+                                swal("Failed", res.responseJSON.nessage, "error");
+                            }
+
+                        }
+                    })
+                } else {
+                    swal("Batal menghapus");
+                }
+            });
+
+    }
+    var listCustomerGlobal = null
+    var listPackageGlobal = null
     $(document).ready(function() {
         loadListTable()
-        var idx = 1
+        var idx = 0
         $('.detail-content').eq(idx).show()
-        $(".sub-menu").eq(idx).addClass('active')
+        $('.sub-menu').eq(idx).addClass('active')
         $('.detail-content').not(':eq(' + idx + ')').hide()
-        $(".sub-menu").not(':eq(' + idx + ')').removeClass('active')
-    });
+        $('.sub-menu').not(':eq(' + idx + ')').removeClass('active')
 
+    });
     $('.sub-menu').click(function() {
+        // console.log("orderId")
         var idx = $(this).index()
         $(".sub-menu").not(':eq(' + idx + ')').removeClass('active')
         $('.detail-content').not(':eq(' + idx + ')').hide()
@@ -213,9 +262,14 @@
 
     })
 
-    function afterSave(res) {
-        console.log(res)
-        loadListTable();
+
+    function afterSave(customerId = null) {
+        if (customerId !== null) {
+            setupDetailCustomer(customerId);
+        } else {
+
+            loadListTable();
+        }
     }
 
     function appentToTable(i, o) {
@@ -233,7 +287,7 @@
             '<div class="btn-tools btn-edit"><a href="#" data-id=' + o.customerId + ' data-toggle="modal" data-target="#exampleModal"><span class="fa fa-pencil-square-o"></span></a></div>&nbsp;' +
             '<div class="btn-tools btn-delete"><a href="#" data-id=' + o.customerId + '><span class="fa fa-trash"></span></a>' +
             '</div>' +
-            '<div class="btn-tools btn-view"><a href="#" data-id=' + o.customerId + '><span class="fa fa-eye"></span></a></div>' +
+            '<div class="btn-tools btn-view"><a href="#" data-customerName='+o.name+' data-id=' + o.customerId + '><span class="fa fa-eye"></span></a></div>' +
             '</td>'
         )
         return listContent
@@ -243,49 +297,39 @@
         var urlHistoryTransaction = "<?php echo base_url("transaction/history/") ?>";
         if (customerId !== null) {
             $.get(urlHistoryTransaction + customerId, function(result) {
-                console.log(result)
-                var parent = $('#detail-ongoing-container')
+                var ongoingParent = $('#detail-ongoing-container')
+                var historyParent = $('#detail-history-container')
                 if (result.content.length > 0) {
                     $('#ongoing-content').attr('style', 'display: block !important');
-                    console.log("sini")
                     var listHistory = result.content
-                    var historyHeader = $('#ongoing-header')
-                    var qty = $('#qty')
-                    var cash = $('.cash')
-                    var status = $('#status-code-icon')
-                    var package = $('.package')
-                    var dateTime = $('.date-time')
-                    var deliv = $('#ongoing-delivery')
-                    var title = []
+                    console.log(listHistory)
+                    var ongoingHeader = $('#ongoing-header')
+                    var ongoingTitleDate = $('#title-header-ongoing').empty()
+                    var ongoingQty = $('#qty')
+                    var ongoingCash = $('.cash')
+                    var ongoingStatus = $('#status-code-icon-ongoing')
+                    var ongoingPackage = $('.package')
+                    var ongoingdateTime = $('.date-time')
+                    var actionStatusTrans = $('.actionStatusTrans')
+                    var ongoingDeliv = $('#ongoing-delivery')
+                    var ongoingTitle2 = []
+                    var ongoingTitle = []
 
-                    var month = new Array();
-                    month[0] = "January";
-                    month[1] = "February";
-                    month[2] = "March";
-                    month[3] = "April";
-                    month[4] = "May";
-                    month[5] = "June";
-                    month[6] = "July";
-                    month[7] = "August";
-                    month[8] = "September";
-                    month[9] = "October";
-                    month[10] = "November";
-                    month[11] = "December";
+                    var listComponent2 = []
                     var listComponent = []
                     $.each(listHistory, (i, o) => {
-                        var d = new Date(o.modifiedtm);
-                        var str = d.getDate() + " " + month[d.getMonth()] + " " + d.getFullYear()
-                        if (!title.includes(str)) {
-                            var dateHeader = $('#title-header-ongoing').empty().append(str)
-                            historyHeader.prepend(dateHeader)
-                            title.push(str)
+                        var str = getStringDate(o.modifiedtm)
+                        var sc = parseInt(o.statusCode)
+                        if (sc === 10 || sc === 20 || sc === 30) {
+                            $('#option-order').show()
+                            removeDuplicateHeaderDate(str, ongoingTitle, ongoingHeader, ongoingTitleDate)
                         } else {
-                            historyHeader.empty()
+                            $('#option-order').hide()
+                            removeDuplicateHeaderDate(str, ongoingTitle2, ongoingHeader, ongoingTitleDate)
                         }
-                        var j = new Date(o.createtm);
-                        var str2 = j.getDate() + " " + month[j.getMonth()] + " " + j.getFullYear() + " at " + j.getHours() + ":" + j.getMinutes()
+                        var str2 = getStringDate(o.createtm)
                         var icon = ""
-                        switch (parseInt(o.statusCode)) {
+                        switch (sc) {
                             case 10:
                                 icon = "fa-hourglass-start";
                                 break;
@@ -302,27 +346,54 @@
                                 icon = "fa-ban";
                                 break;
                         }
-                        console.log(icon)
-                        status.removeClass().addClass("fa").addClass(icon)
-                        package.empty().append(o.packageName)
-                        qty.empty().append('x').append(o.qty)
-                        cash.empty().append('Rp ').append(o.total)
-                        dateTime.empty().append(str2)
-                        deliv.empty().append(o.delivery == 0 ? "Not Delivery" : "Delivery")
+                        ongoingStatus.removeClass().addClass("fa").addClass(icon)
+                        ongoingPackage.empty().append(o.packageName)
+                        ongoingQty.empty().append('x').append(o.qty)
+                        ongoingCash.empty().append('Rp ').append(o.total)
+                        ongoingdateTime.empty().append("Created at " + str2)
+
+                        var del = ""
+                        if (o.delivery == 0) {
+                            del = "Ambil Sendiri"
+                            $(".statusDelivery").hide()
+                        } else {
+                            del = "Diantar"
+                            $(".statusDelivery").show()
+                        }
+                        ongoingDeliv.empty().append(del)
                         var ongoingContent = $('#ongoing-content').clone()
-                        listComponent.push(ongoingContent)
+                        if (sc === 10 || sc === 20 || sc === 30) {
+                            // console.log(ongoingContent.find(actionStatusTrans))
+                            ongoingContent.find(".actionStatusTrans").data('orderId', o.orderId)
+                            ongoingContent.find(".actionStatusTrans").data('customerId', o.customerId)
+                            listComponent.push(ongoingContent)
+                        } else {
+                            listComponent2.push(ongoingContent)
+                        }
+
                     })
-                    parent.empty()
-                    $.each(listComponent, (i, o) => {
-                        console.log("LIST COMPONENT")
-                        parent.append(o)
-                    })
+                    ongoingParent.empty()
+                    if (listComponent.length > 0) {
+                        $.each(listComponent, (i, o) => {
+                            ongoingParent.append(o)
+
+                        })
+                    } else {
+                        clearOngoingContent(ongoingParent)
+                    }
+                    historyParent.empty()
+                    if (listComponent2.length > 0) {
+                        $.each(listComponent2, (i, o) => {
+                            historyParent.append(o)
+
+                        })
+                    } else {
+                        clearHistoryContent(historyParent)
+                    }
 
                 } else {
-                    $('.ongoing-content').each(function (index, element) {
-                      $(element).attr('style', 'display: none !important');
-                    })
-                    parent.append("<h3><center> Belum Ada apa apa :( </center></h3>")
+                    clearOngoingContent(ongoingParent)
+                    clearHistoryContent(historyParent)
                 }
 
             })
@@ -330,11 +401,61 @@
 
     }
 
+    function removeDuplicateHeaderDate(str, titleList, headerComponent, titleComponent) {
+        if (!titleList.includes(str)) {
+            var dateHeader = titleComponent.empty().append(str)
+            headerComponent.append(dateHeader)
+            titleList.push(str)
+        } else {
+            headerComponent.empty()
+        }
+
+    }
+
+    function clearHistoryContent(historyParent) {
+
+        $('.title-nothing-history').empty()
+        $('.history-content').each(function(index, element) {
+            $(element).attr('style', 'display: none !important');
+        })
+        historyParent.append("<h3 class='title-nothing-history'><center> Belum Ada apa apa :( </center></h3>")
+    }
+
+    function clearOngoingContent(ongoingParent) {
+
+        $('.title-nothing-ongoing').empty()
+        $('.ongoing-content').each(function(index, element) {
+            $(element).attr('style', 'display: none !important');
+        })
+        ongoingParent.append("<h3 class='title-nothing-ongoing'><center> Belum Ada apa apa :( </center></h3>")
+    }
+
+    function getStringDate(date) {
+        var month = new Array();
+        month[0] = "January";
+        month[1] = "February";
+        month[2] = "March";
+        month[3] = "April";
+        month[4] = "May";
+        month[5] = "June";
+        month[6] = "July";
+        month[7] = "August";
+        month[8] = "September";
+        month[9] = "October";
+        month[10] = "November";
+        month[11] = "December";
+        var j = new Date(date);
+        var str2 = j.getDate() + " " + month[j.getMonth()] + " " + j.getFullYear()
+
+        return str2
+    }
+
     function loadListTable() {
         var urlListCustomer = "<?php echo base_url("customer/show") ?>";
         $.get(urlListCustomer, function(result) {
             // console.log(result.content)  
             var data = result.content;
+            listCustomerGlobal = data;
             var tbody = $('.my-tools');
             $(".my-tools tr").remove();
             $.each(data, (i, o) => {
@@ -347,7 +468,10 @@
             $('.my-table').DataTable();
             $('.btn-view a').click(function() {
                 var customerId = $(this).data('id')
+                var customerName = $(this).data('customername')
                 var pat = $('.detail-customer')
+                console.log($(this).data())
+                $('.detail-title').empty().prepend(customerName+'\'s Transaction')
                 // $('.detail-customer').append("<h1>" + customerId + "</h1>").slideToggle("slow");
                 if (pat.is(":visible")) {
                     pat.slideToggle("slow")
@@ -362,7 +486,6 @@
                 } else {
                     // pat.empty()
                     setupDetailCustomer(($(this).data("id")))
-                    console.log($(this).data("id"))
                     pat.data("id", $(this).data("id"))
                     pat.slideToggle("slow");
                 }
@@ -394,7 +517,7 @@
                                     swal.showLoading()
                                 }
                             })
-                            $.post(urlDelete, data).done((res) => {
+                            $.post(urlDelete, JSON.stringify(data), null, "json").done((res) => {
                                 swal.stopLoading()
                                 if (res) {
                                     if (res.success) {
@@ -403,7 +526,7 @@
                                         });
                                         loadListTable()
                                     } else {
-                                        swal("Failed", res.message, "error");
+                                        swal("Failed", res.responseJSON.nessage, "error");
                                     }
 
                                 }
@@ -413,7 +536,6 @@
                         }
                     });
 
-                closeForm()
 
             })
             $('.btn-edit a').click(function() {

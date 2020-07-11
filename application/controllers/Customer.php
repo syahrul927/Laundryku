@@ -14,6 +14,7 @@ require_once "ParentControllerAdmin.php";
         $this->load->view('_part/header');
         $this->load->view('customer/customerView');
         $this->load->view('customer/customerForm');
+        $this->load->view('transaction/transactionForm');
         $this->load->view('_part/footer');
     }
     function show($detail = null, $id = null)
@@ -39,11 +40,12 @@ require_once "ParentControllerAdmin.php";
     }
     function save()
     {
+        $req =  $this->requestBuilder();
         $this->output
             ->set_content_type('application/json');
         $responseDto = new ResponseController();
-        if (isset($_POST['name']) && isset($_POST['address']) && isset($_POST['telp'])) {
-            $param = $this->postToDto();
+        if (isset($req['name']) && isset($req['address']) && isset($req['telp'])) {
+            $param = $this->postToDto($req);
             $res = $this->CustomerModel->saveCustomer($param);
             if ($res == null) {
                 $responseDto->setSuccess(false);
@@ -59,6 +61,7 @@ require_once "ParentControllerAdmin.php";
 
     function update()
     {
+        $req =  $this->requestBuilder();
         $this->output
             ->set_content_type('application/json');
         $responseDto = new ResponseController();
@@ -66,7 +69,7 @@ require_once "ParentControllerAdmin.php";
             $responseDto->setStatus(400);
             $this->responseBuilder($responseDto);
         }
-        $dto =  $this->postToDto(); 
+        $dto =  $this->postToDto($req); 
         $res = $this->CustomerModel->updateCustomer($dto);
         if ($res == null) {
             $responseDto->setSuccess(false);
@@ -80,21 +83,18 @@ require_once "ParentControllerAdmin.php";
     }
     function delete()
     {
+        $req =  $this->requestBuilder();
         $this->output
             ->set_content_type('application/json');
 
         $responseDto = new ResponseController();
-        if (isset($_POST['customerId'])) {
-            $responseDto->setSuccess($this->CustomerModel->deleteCustomerById($_POST['customerId']));
+        if (isset($req['customerId'])) {
+            $responseDto->setSuccess($this->CustomerModel->deleteCustomerById($req['customerId']));
         } else {
             $responseDto->setSuccess(false);
             $responseDto->setStatus(400);
         }
         $this->responseBuilder($responseDto);
-    }
-    function logout()
-    {
-        session_destroy();
     }
 
     private function responseBuilder($responseDto)
@@ -106,15 +106,15 @@ require_once "ParentControllerAdmin.php";
             ->set_output(json_encode($responseDto));
     }
 
-    function postToDto()
+    function postToDto($req)
     {
         $param = new $this->CustomerModel();
-        if (isset($_POST['customerId'])) {
-            $param->setCustomerId($_POST['customerId']);
+        if (isset($req['customerId'])) {
+            $param->setCustomerId($req['customerId']);
         }
-        $param->setName($_POST['name']);
-        $param->setAddress($_POST['address']);
-        $param->setTelp($_POST['telp']);
+        $param->setName($req['name']);
+        $param->setAddress($req['address']);
+        $param->setTelp($req['telp']);
         return $param;
     }
     }

@@ -22,6 +22,13 @@ $gray-color:#989898;
     overflow-x: hidden;
     
 }
+.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable{
+    background-color: $primary-color!important;
+}
+.select2-container{
+    overflow:visible!important;
+
+}
 .swal-modal *{
     overflow-y: unset!important;
     overflow-x: unset!important;
@@ -163,7 +170,7 @@ a{
                     padding: 0px;
                     margin:2%
                 }
-                position: relative;
+                // position: block;
                 .detail-customer{
                     display: none;
                     width: 100%!important;
@@ -206,6 +213,10 @@ a{
                 }
             }
         }
+    }
+    .card-container{
+        overflow-y: hidden;
+        padding-bottom: 3%;;
     }
     .detail-content{
         display: none;

@@ -1,14 +1,20 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Login extends CI_Controller {
+class Account extends CI_Controller {
 
 	 function __construct() {
 		parent:: __construct();
 		$this->load->model("Global_m");
 	}
-	
-	public function index()
+	public function index(){
+		if(empty($_SESSION['username'])){
+			$this->login();
+		}
+		
+		redirect(base_url('customer'));
+	}
+	public function login()
 	{
 		$this->load->view('login_v');
 	}
@@ -50,6 +56,9 @@ class Login extends CI_Controller {
 			<?php
 		}
 
+	}
+	public function logout(){
+		session_destroy();
 	}
 }
 ?>

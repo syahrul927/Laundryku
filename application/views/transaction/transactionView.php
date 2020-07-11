@@ -13,7 +13,7 @@
     <div class="row content-body">
         <div class="col-sm">
             <div class="row ">
-                <div class="col-sm title-content"><span>Data Paket</span></div>
+                <div class="col-sm title-content"><span>Data Transaction</span></div>
                 <div class="col-sm-5">
                     <button class="btn btn-primary btn-sm my-btn add-btn" data-toggle="modal" data-target="#exampleModal">Add New</button>
                 </div>
@@ -23,9 +23,11 @@
                     <thead>
                         <tr>
                             <th scope="col">No</th>
-                            <th scope="col">Package Name</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Description</th>
+                            <th scope="col">Order Id</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Paket</th>
+                            <th scope="col">Tanggal Order</th>
+                            <th scope="col">Status</th>
                             <th scope="col">Tools</th>
                         </tr>
                     </thead>
@@ -45,63 +47,75 @@
                     </div>
                     <div class="row">
                         <div class="col-sm8">
-                            <div class="sub-menu active">
-                                <span class="title">History</span>
-                            </div>
                             <div class="sub-menu">
                                 <span class="title">Ongoing</span>
+                            </div>
+                            <div class="sub-menu">
+                                <span class="title">History</span>
                             </div>
                         </div>
                         <div class="col-sm4">
                             <button class="btn btn-primary btn-sm my-btn">&nbsp; + &nbsp;</button>
                         </div>
                     </div>
+
                     <div class="row">
-                        <div class="detail-content">
-                            <div class="history-content">
+                        <!-- dummy list, it will change when hit api get result -->
+                        <div class="detail-content" id="detail-ongoing-container">
+                            <div class="ongoing-content" id="ongoing-content">
                                 <!-- one day one record -->
                                 <div class="row">
-                                    <div class="history-header">
-                                        <span>13 Jun 2020</span>
+                                    <div class="history-header" id="ongoing-header">
+                                        <span id="title-header-ongoing">13 Jun 2020</span>
                                     </div>
                                 </div>
                                 <div class="row trans-detail">
                                     <div class="col-md1">
-                                        <span class="fa fa-hourglass-start"></span>
+                                        <span class="fa" id="status-code-icon-ongoing"></span>
                                     </div>
-                                    <div class="col-md6">
+                                    <div class="col-md4">
                                         <div class="package">
-                                            Paket Baju Ringan
+                                            PAKET ANJING
                                         </div>
                                         <div class="date-time">
                                             13 Jun 2020 at 10:40
                                         </div>
                                     </div>
                                     <div class="col-md3 history-delivery">
-                                        <span>Not Delivery</span>
+                                        <span id="ongoing-delivery">Not Delivery</span>
                                     </div>
-                                    <div class="col-md1">
+                                    <div class="col-md1" id="qty">
                                         x1
                                     </div>
                                     <div class="col-md1 cash">
                                         Rp 15.000
+                                    </div>
+                                    <div class="col-md2">
+                                        <div class="action-ongoing">
+                                            <div class="action-ongoing-menu">
+                                                <a href="#">Done</a>
+                                                <a href="#">Delivery</a>
+                                                <a href="#">Finish</a>
+                                            </div>
+                                            <span class="fa fa-ellipsis-v"></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                         </div>
 
-                        <div class="detail-content">
+                        <div class="detail-content" id="detail-history">
                             <div class="history-content">
                                 <!-- one day one record -->
                                 <div class="row">
-                                    <div class="history-header">
-                                        <span>13 Jun 2020</span>
+                                    <div class="history-header" id="history-header">
+                                        <span class="title-header-history">13 Jun 2020</span>
                                     </div>
                                 </div>
                                 <div class="row trans-detail">
                                     <div class="col-md1">
-                                        <span class="fa fa-hourglass-start"></span>
+                                        <span class="fa" id="status-code-icon-history"></span>
                                     </div>
                                     <div class="col-md6">
                                         <div class="package">
@@ -123,8 +137,7 @@
                                 </div>
                             </div>
 
-                            <div class="history-content">
-                                <!-- one day two record -->
+                            <!-- <div class="history-content">
                                 <div class="row">
                                     <div class="history-header">
                                         <span>01 Jun 2020</span>
@@ -132,7 +145,7 @@
                                 </div>
                                 <div class="row trans-detail">
                                     <div class="col-md1">
-                                        <span class="fa fa-hourglass-start"></span>
+                                        <span class="fa fa-flag-checkered"></span>
                                     </div>
                                     <div class="col-md6">
                                         <div class="package">
@@ -174,7 +187,7 @@
                                         Rp 30.000
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -186,37 +199,142 @@
 <script>
     $(document).ready(function() {
         loadListTable()
+        var idx = 1
+        $('.detail-content').eq(idx).show()
+        $(".sub-menu").eq(idx).addClass('active')
+        $('.detail-content').not(':eq(' + idx + ')').hide()
+        $(".sub-menu").not(':eq(' + idx + ')').removeClass('active')
     });
 
+    $('.sub-menu').click(function() {
+        var idx = $(this).index()
+        $(".sub-menu").not(':eq(' + idx + ')').removeClass('active')
+        $('.detail-content').not(':eq(' + idx + ')').hide()
+        $(this).addClass('active')
+        $('.detail-content').eq(idx).show()
+
+    })
+
     function afterSave(res) {
-        console.log(res)
         loadListTable();
     }
 
     function appentToTable(i, o) {
         var listContent = $('<tr></tr>');
         var number = $('<td></td>').append(i + 1);
-        var name = $('<td></td>').append(o.packageName);
-        var price = $('<td></td>').append(o.price);
-        var description = $('<td></td>').append(o.description);
+        var name = $('<td></td>').append(o.name);
+        var telp = $('<td></td>').append(o.telp);
+        var address = $('<td></td>').append(o.address);
         listContent.append(number);
         listContent.append(name);
-        listContent.append(price);
-        listContent.append(description);
+        listContent.append(telp);
+        listContent.append(address);
         listContent.append(
             '<td class="tools">' +
-            '<div class="btn-tools btn-edit"><a href="#" data-id=' + o.packageId + ' data-toggle="modal" data-target="#exampleModal"><span class="fa fa-pencil-square-o"></span></a></div>&nbsp;' +
-            '<div class="btn-tools btn-delete"><a href="#" data-id=' + o.packageId + '><span class="fa fa-trash"></span></a>' +
-            '</div>' +
-            // '<div class="btn-tools btn-view"><a href="#" data-id=' + o.packageId + '><span class="fa fa-eye"></span></a></div>' +
+            '<div class="btn-tools btn-edit"><a href="#" data-id=' + o.customerId + ' data-toggle="modal" data-target="#exampleModal"><span class="fa fa-pencil-square-o"></span></a></div>&nbsp;' +
+            '<div class="btn-tools btn-delete"><a href="#" data-id=' + o.customerId + '><span class="fa fa-trash"></span></a>' +
+            '</div>' + 
+            '<div class="btn-tools btn-view"><a href="#" data-id=' + o.customerId + '><span class="fa fa-eye"></span></a></div>' +
             '</td>'
         )
         return listContent
     }
 
+    function setupDetailCustomer(customerId = null) {
+        var urlHistoryTransaction = "<?php echo base_url("transaction/history/") ?>";
+        if (customerId !== null) {
+            $.get(urlHistoryTransaction + customerId, function(result) {
+                var ongoingParent = $('#detail-ongoing-container')
+                if (result.content.length > 0) {
+                    $('#ongoing-content').attr('style', 'display: block !important');
+                    var listHistory = result.content
+                    var ongoingHeader = $('#ongoing-header')
+                    var ongoingQty = $('#qty')
+                    var ongoingCash = $('.cash')
+                    var ongoingStatus = $('#status-code-icon-ongoing')
+                    var ongoingPackage = $('.package')
+                    var ongoingdateTime = $('.date-time')
+                    var ongoingDeliv = $('#ongoing-delivery')
+                    var ongoingTitle = []
+
+                    var listComponent = []
+                    $.each(listHistory, (i, o) => {
+                        var d = new Date(o.modifiedtm);
+                        var str = d.getDate() + " " + month[d.getMonth()] + " " + d.getFullYear()
+                        if (!ongoingTitle.includes(str)) {
+                            var dateHeader = $('#title-header-ongoing').empty().append(str)
+                            ongoingHeader.prepend(dateHeader)
+                            ongoingTitle.push(str)
+                        } else {
+                            ongoingHeader.empty()
+                        }
+                        var str2 = getStringDate(o.createtm)
+                        var icon = ""
+                        switch (parseInt(o.statusCode)) {
+                            case 10:
+                                icon = "fa-hourglass-start";
+                                break;
+                            case 20:
+                                icon = "fa-check";
+                                break;
+                            case 30:
+                                icon = "fa-bicycle";
+                                break;
+                            case 40:
+                                icon = "fa-flag-checkered";
+                                break;
+                            default:
+                                icon = "fa-ban";
+                                break;
+                        }
+                        ongoingStatus.removeClass().addClass("fa").addClass(icon)
+                        ongoingPackage.empty().append(o.packageName)
+                        ongoingQty.empty().append('x').append(o.qty)
+                        ongoingCash.empty().append('Rp ').append(o.total)
+                        ongoingdateTime.empty().append(str2)
+                        ongoingDeliv.empty().append(o.delivery == 0 ? "Not Delivery" : "Delivery")
+                        var ongoingContent = $('#ongoing-content').clone()
+                        listComponent.push(ongoingContent)
+                    })
+                    ongoingParent.empty()
+                    $.each(listComponent, (i, o) => {
+                        ongoingParent.append(o)
+                    })
+
+                } else {
+                    $('.title-nothing').empty()
+                    $('.ongoing-content').each(function (index, element) {
+                      $(element).attr('style', 'display: none !important');
+                    })
+                    ongoingParent.append("<h3 class='title-nothing'><center> Belum Ada apa apa :( </center></h3>")
+                }
+
+            })
+        }
+
+    }
+
+    function getStringDate(date){
+        var month = new Array();
+        month[0] = "January";
+        month[1] = "February";
+        month[2] = "March";
+        month[3] = "April";
+        month[4] = "May";
+        month[5] = "June";
+        month[6] = "July";
+        month[7] = "August";
+        month[8] = "September";
+        month[9] = "October";
+        month[10] = "November";
+        month[11] = "December";
+        var j = new Date();
+        var str2 = j.getDate() + " " + month[j.getMonth()] + " " + j.getFullYear() + " at " + j.getHours() + ":" + j.getMinutes()
+        return str2
+    }
     function loadListTable() {
-        var urlListPackage = "<?php echo base_url("package/show") ?>";
-        $.get(urlListPackage, function(result) {
+        var urlListCustomer = "<?php echo base_url("customer/show") ?>";
+        $.get(urlListCustomer, function(result) {
             // console.log(result.content)  
             var data = result.content;
             var tbody = $('.my-tools');
@@ -230,15 +348,32 @@
         }).done(() => {
             $('.my-table').DataTable();
             $('.btn-view a').click(function() {
-                var packageId = $(this).data('id')
-                $('.detail-customer').append("<h1>" + packageId + "</h1>").slideToggle("slow");
-
+                var customerId = $(this).data('id')
+                var pat = $('.detail-customer')
+                // $('.detail-customer').append("<h1>" + customerId + "</h1>").slideToggle("slow");
+                if (pat.is(":visible")) {
+                    pat.slideToggle("slow")
+                    if ($(this).data('id') === pat.data("id")) {
+                        pat.data("id", null)
+                    } else {
+                        setupDetailCustomer(($(this).data("id")))
+                        console.log($(this).data("id"))
+                        pat.data("id", $(this).data("id"))
+                        pat.slideToggle("slow");
+                    }
+                } else {
+                    // pat.empty()
+                    setupDetailCustomer(($(this).data("id")))
+                    console.log($(this).data("id"))
+                    pat.data("id", $(this).data("id"))
+                    pat.slideToggle("slow");
+                }
             });
             $('.btn-delete a').click(function() {
                 var p = $(this).data('id')
-                var urlDelete = "<?php echo base_url("package/delete") ?>"
+                var urlDelete = "<?php echo base_url("customer/delete") ?>"
                 var data = {
-                    packageId: p
+                    customerId: p
                 }
                 swal({
                         title: "Anda yakin ingin menghapus?",
@@ -261,30 +396,31 @@
                                     swal.showLoading()
                                 }
                             })
-                            $.post(urlDelete, JSON.stringify(data), null, "json").always((res) => {
+                            $.post(urlDelete, data).done((res) => {
                                 swal.stopLoading()
-                                // console.log("wayaw")
-                                if (res.success) {
-                                    swal("Berhasil Menghapus", {
-                                        icon: "success",
-                                    });
-                                    loadListTable()
-                                } else {
-                                    // console.log(res)
-                                    swal("Failed", res.responseJSON.message, "error");
-                                }
+                                if (res) {
+                                    if (res.success) {
+                                        swal("Berhasil Menghapus", {
+                                            icon: "success",
+                                        });
+                                        loadListTable()
+                                    } else {
+                                        swal("Failed", res.message, "error");
+                                    }
 
+                                }
                             })
                         } else {
                             swal("Batal menghapus");
                         }
                     });
 
+                closeForm()
 
             })
             $('.btn-edit a').click(function() {
                 var p = $(this).data('id')
-                $.get(urlListPackage + "/detail/" + p, function(result) {
+                $.get(urlListCustomer + "/detail/" + p, function(result) {
                     if (result.status === 200) {
                         setupForm(result.content);
                     } else {
@@ -310,15 +446,6 @@
         var json = JSON.stringify(values);
 
         alert(json);
-    });
-
-    $(document).on("click", ".modifyRecord", function() {
-        var myBookId = $(this).data('id');
-        console.log(myBookId);
-        $("#name-field").val(myBookId);
-        // As pointed out in comments, 
-        // it is unnecessary to have to manually call the modal.
-        // $('#addBookDialog').modal('show');
     });
     $('.feat-btn').click(function() {
         $('nav ul .feat-show').toggle("slow");

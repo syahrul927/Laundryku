@@ -11,8 +11,8 @@ class Transaction extends ParentControllerAdmin
     function index()
     {
         $this->load->view('_part/header');
-        $this->load->view('package/packageView');
-        $this->load->view('package/packageForm');
+        $this->load->view('transaction/transactionView');
+        $this->load->view('transaction/transactionForm');
         $this->load->view('_part/footer');
     }
     function show($detail = null, $id = null)
@@ -36,10 +36,11 @@ class Transaction extends ParentControllerAdmin
             $this->responseBuilder($responseDto);
         }
     }
-    function history($customer = null){
+    function history($customer = null)
+    {
         $this->output
             ->set_content_type('application/json');
-            $responseDto = new ResponseController();
+        $responseDto = new ResponseController();
         if (isset($customer)) {
             $responseDto->setContent($this->TransactionModel->getListTransaction($customer));
             $responseDto->setSuccess(true);
@@ -49,16 +50,16 @@ class Transaction extends ParentControllerAdmin
             $responseDto->setSuccess(false);
             $this->responseBuilder($responseDto);
         }
-
     }
     function save()
     {
+        $req =  $this->requestBuilder();
         $this->output
             ->set_content_type('application/json');
         $responseDto = new ResponseController();
-        if (isset($_POST['name']) && isset($_POST['price']) && isset($_POST['description'])) {
-            $param = $this->postToDto();
-            $res = $this->PackageModel->savePackage($param);
+        if (isset($req['customerId']) && isset($req['packageId']) && isset($req['qty']) && isset($req['total']) && isset($_SESSION['username'])) {
+            $param = $this->postToDto($req);
+            $res = $this->TransactionModel->saveTransaction($param);
             if ($res == null) {
                 $responseDto->setSuccess(false);
                 $responseDto->setStatus(500);
@@ -67,30 +68,44 @@ class Transaction extends ParentControllerAdmin
                 $responseDto->setStatus(200);
                 $responseDto->setContent($res);
             }
-        $this->responseBuilder($responseDto);
+            $this->responseBuilder($responseDto);
         }
     }
 
-    function update()
+    function update($status = null)
     {
+        $req =  $this->requestBuilder();
         $this->output
             ->set_content_type('application/json');
         $responseDto = new ResponseController();
-        if(empty($_POST['packageId'])){
+        if (empty($req['orderId'])) {
+            $responseDto->setSuccess(false);
             $responseDto->setStatus(400);
             $this->responseBuilder($responseDto);
-        }
-        $dto =  $this->postToDto(); 
-        $res = $this->PackageModel->updatePackage($dto);
-        if ($res == null) {
-            $responseDto->setSuccess(false);
-            $responseDto->setStatus(500);
         } else {
-            $responseDto->setSuccess(true);
-            $responseDto->setStatus(200);
-            $responseDto->setContent($res);
+            if (isset($status)) {
+                if (isset($req['statusCode'])) {
+                    $responseDto->setSuccess(true);
+                    $responseDto->setContent($this->TransactionModel->updateStatusTransaction($req['orderId'], $req['statusCode']));
+                } else {
+                    $responseDto->setSuccess(false);
+                    $responseDto->setStatus(400);
+                }
+            } else {
+
+                $dto =  $this->postToDto($req);
+                $res = $this->TransactionModel->updateTransaction($dto);
+                if ($res == null) {
+                    $responseDto->setSuccess(false);
+                    $responseDto->setStatus(500);
+                } else {
+                    $responseDto->setSuccess(true);
+                    $responseDto->setStatus(200);
+                    $responseDto->setContent($res);
+                }
+            }
         }
-    $this->responseBuilder($responseDto);
+        $this->responseBuilder($responseDto);
     }
     function delete()
     {
@@ -98,17 +113,13 @@ class Transaction extends ParentControllerAdmin
             ->set_content_type('application/json');
 
         $responseDto = new ResponseController();
-        if (isset($_POST['packageId'])) {
-            $responseDto->setSuccess($this->PackageModel->deletePackageById($_POST['packageId']));
+        if (isset($_POST['orderId'])) {
+            $responseDto->setSuccess($this->TransactionModel->deleteTransactionById($_POST['orderId']));
         } else {
             $responseDto->setSuccess(false);
             $responseDto->setStatus(400);
         }
         $this->responseBuilder($responseDto);
-    }
-    function logout()
-    {
-        session_destroy();
     }
 
     private function responseBuilder($responseDto)
@@ -120,15 +131,19 @@ class Transaction extends ParentControllerAdmin
             ->set_output(json_encode($responseDto));
     }
 
-    function postToDto()
+    function postToDto($req)
     {
-        $param = new $this->PackageModel();
-        if (isset($_POST['packageId'])) {
-            $param->setPackageId($_POST['packageId']);
+        $param = new $this->TransactionModel();
+        if (isset($req['orderId'])) {
+            $param->setTransactionId($req['orderId']);
         }
-        $param->setName($_POST['name']);
-        $param->setPrice($_POST['price']);
-        $param->setDescription($_POST['description']);
+        $param->setCustomerId($req['customerId']);
+        $param->setPackageId($req['packageId']);
+        $param->setQty($req['qty']);
+        $param->setTotal($req['total']);
+        $param->setKasirId($_SESSION['username']);
+        $param->setDelivery($req['delivery']);
+        $param->setExtraCost($req['extraCost']);
         return $param;
     }
 }
