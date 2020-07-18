@@ -66,12 +66,43 @@
         var customerOption = []
         var paketOption = []
         $('#modalTransaction').on('show.bs.modal', function(e) {
-            customerOption = $.map(listCustomerGlobal, function(o) {
-                return {
-                    id: o.customerId,
-                    text: o.name
-                }
-            })
+            if (listCustomerGlobal === null) {
+                swal({
+                    text: 'Silahkan tunggu..!',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: false,
+                    timerProgressBar: true,
+                    button: false,
+                    onOpen: () => {
+                        swal.showLoading()
+                    }
+                })
+                var urlListCustomer = "<?php echo base_url("customer/show") ?>";
+                $.get(urlListCustomer, function(result) {
+                    listCustomerGlobal = result.content;
+                }).then(function() {
+                    swal.close()
+                    //saat customer sudah ditemukan
+                    customerOption = $.map(listCustomerGlobal, function(o) {
+                        return {
+                            id: o.customerId,
+                            text: o.name
+                        }
+                    })
+
+
+                    customerOption.unshift({
+                        id: '',
+                        text: 'Pilih Customer'
+                    })
+
+                    $('#field-customer').select2({
+                        data: customerOption
+                    })
+                })
+            } 
+               
 
             if (listPackageGlobal === null) {
                 swal({
@@ -108,14 +139,6 @@
 
                 })
             }
-            customerOption.unshift({
-                id: '',
-                text: 'Pilih Customer'
-            })
-
-            $('#field-customer').select2({
-                data: customerOption
-            })
 
         })
 
@@ -144,7 +167,7 @@
             })
             var customerId = $('#field-customer').val()
             var packageId = $('#field-paket').val()
-            var delivery = $('#delivery-checkbox').val() ? 1 : 0
+            var delivery = $('#delivery-checkbox').is(":checked") ? 1 : 0
             var qty = Number($('.input-number').val())
             var extraCost = Number(delivery == 0 ? 0 : $('#extraCost').val())
             var pricePackage = listPackageGlobal.find(p => p.packageId === packageId)
@@ -173,7 +196,7 @@
                 swal.close()
             })
         } else {
-            $("#my-form")[0].reportValidity();
+            $("#my-form-trans")[0].reportValidity();
         }
     })
 

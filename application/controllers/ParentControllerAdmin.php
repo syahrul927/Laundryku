@@ -5,9 +5,9 @@ include('ResponseController.php');
         function __construct(){
             parent::__construct();
             
-            // if(empty($_SESSION['username'])){
-            //    redirect(base_url("account/login"));
-            // }
+            if(empty($_SESSION['username'])){
+               redirect(base_url("account/login"));
+            }
         }
         
     public function requestBuilder(){

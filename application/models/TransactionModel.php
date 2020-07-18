@@ -38,13 +38,20 @@ class TransactionModel extends CI_Model
         return $this->db->get($this->tableName)->row_object();
     }
 
-    public function getListTransaction($customerId = null)
+    public function getListTransaction($customerId = null, $dateFrom = null, $dateTo = null)
     {
-        $this->db->select('ordertrans.orderId, ordertrans.customerId, ordertrans.packageId, ordertrans.qty,ordertrans.total, ordertrans.kasirId, ordertrans.delivery,ordertrans.extraCost, ordertrans.statusCode, ordertrans.createtm, ordertrans.modifiedtm, package.packageName');
+        $this->db->select('ordertrans.orderId, package.price, ordertrans.customerId, kasir.nama as namakasir, ordertrans.packageId, ordertrans.qty,ordertrans.total, ordertrans.kasirId, ordertrans.delivery,ordertrans.extraCost, ordertrans.statusCode, ordertrans.createtm, ordertrans.modifiedtm, customer.name, package.packageName');
         if (isset($customerId)) {
             $this->db->where("ordertrans.customerId", $customerId);
+        }  
+        if (isset($dateFrom)) {
+            $this->db->where("ordertrans.createtm > ", $dateFrom);
+        }
+        if (isset($dateTo)) {
+            $this->db->where("ordertrans.createtm < ", $dateTo);
         }
         $this->db->join('package', 'package.packageId = ordertrans.packageId');
+        $this->db->join('kasir', 'kasir.kasirId = ordertrans.kasirId');
         $this->db->join('customer', 'customer.customerId = ordertrans.customerId');
         $this->db->order_by('ordertrans.modifiedtm', 'DESC');
         return $this->db->get($this->tableName)->result();

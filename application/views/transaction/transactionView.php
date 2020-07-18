@@ -15,17 +15,17 @@
             <div class="row ">
                 <div class="col-sm title-content"><span>Data Transaction</span></div>
                 <div class="col-sm-5">
-                    <button class="btn btn-primary btn-sm my-btn add-btn" data-toggle="modal" data-target="#exampleModal">Add New</button>
+                    <button class="btn btn-primary btn-sm my-btn add-btn" data-toggle="modal" data-target="#modalTransaction">Add New</button>
                 </div>
             </div>
             <div class="row">
                 <table class="table my-table">
                     <thead>
                         <tr>
-                            <th scope="col">No</th>
                             <th scope="col">Order Id</th>
                             <th scope="col">Name</th>
                             <th scope="col">Paket</th>
+                            <th scope="col">Delivery</th>
                             <th scope="col">Tanggal Order</th>
                             <th scope="col">Status</th>
                             <th scope="col">Tools</th>
@@ -197,6 +197,54 @@
 </div>
 
 <script>
+    var listCustomerGlobal = null
+    var listPackageGlobal = null
+    function actionStatus(e) {
+        var urlUpdateStatus = "<?php echo base_url("transaction/update/status") ?>"
+        var data = {
+            orderId: $(e).data('orderid'),
+            statusCode: $(e).data('status')
+        }
+        swal({
+                title: "Anda yakin ingin mengupdate status menjadi " + $(e).text() + "?",
+                icon: "warning",
+                buttons: true,
+                showLoaderOnConfirm: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    swal({
+                        text: 'Silahkan tunggu..!',
+                        allowOutsideClick: false,
+                        closeOnEsc: false,
+                        allowEnterKey: false,
+                        timerProgressBar: true,
+                        button: false,
+                        onOpen: () => {
+                            swal.showLoading()
+                        }
+                    })
+                    $.post(urlUpdateStatus, JSON.stringify(data), null, "json").done((res) => {
+                        swal.stopLoading()
+                        if (res) {
+                            if (res.success) {
+                                swal("Berhasil Mengupdate", {
+                                    icon: "success",
+                                });
+                                 loadListTable()
+                            } else {
+                                swal("Failed", res.responseJSON.nessage, "error");
+                            }
+
+                        }
+                    })
+                } else {
+                    swal("Batal menghapus");
+                }
+            });
+
+    }
     $(document).ready(function() {
         loadListTable()
         var idx = 1
@@ -221,23 +269,59 @@
 
     function appentToTable(i, o) {
         var listContent = $('<tr></tr>');
-        var number = $('<td></td>').append(i + 1);
+        var orderId = $('<td></td>').append(o.orderId);
         var name = $('<td></td>').append(o.name);
-        var telp = $('<td></td>').append(o.telp);
-        var address = $('<td></td>').append(o.address);
-        listContent.append(number);
+        var packageName = $('<td></td>').append(o.packageName);
+        var delivery = $('<td></td>').append(parseInt(o.delivery)===1?"Diantar":"Ambil Sendiri");
+        var createtm = $('<td></td>').append(o.createtm);
+        var iconStatus = $('<span class="fa"></span>').addClass(getIconStatusCode(parseInt(o.statusCode)))
+        var statusCode = $('<td></td>').append(iconStatus);
+        listContent.append(orderId);
         listContent.append(name);
-        listContent.append(telp);
-        listContent.append(address);
-        listContent.append(
-            '<td class="tools">' +
-            '<div class="btn-tools btn-edit"><a href="#" data-id=' + o.customerId + ' data-toggle="modal" data-target="#exampleModal"><span class="fa fa-pencil-square-o"></span></a></div>&nbsp;' +
-            '<div class="btn-tools btn-delete"><a href="#" data-id=' + o.customerId + '><span class="fa fa-trash"></span></a>' +
-            '</div>' + 
-            '<div class="btn-tools btn-view"><a href="#" data-id=' + o.customerId + '><span class="fa fa-eye"></span></a></div>' +
-            '</td>'
-        )
+        listContent.append(packageName);
+        listContent.append(delivery);
+        listContent.append(createtm);
+        listContent.append(statusCode);
+        var s = parseInt(o.statusCode);
+        var isDelivery = parseInt(o.delivery)===1 ?'<a data-orderid=' + o.orderId + ' data-status="30" class="dropdown-item actionStatusTrans statusDelivery" href="#"  onclick="actionStatus(this)">Delivery</a>' :''
+        if (s === 10 || s === 20 || s === 30) {
+            listContent.append(
+                '<td class="tools">' +
+                '<a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+                '<i class="fa  fa-fw"></i>' +
+                '</a>' +
+                '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">' +
+                '<a data-orderid=' + o.orderId + ' data-status="20" class="dropdown-item actionStatusTrans statusDone" href="#"  onclick="actionStatus(this)">Done</a>' +
+                isDelivery+
+                '<a data-orderid=' + o.orderId + ' data-status="40" class="dropdown-item actionStatusTrans statusFinish" href="#" onclick="actionStatus(this)">Finish</a>' +
+                '</div>' +
+                '</td>')
+        }else{
+            listContent.append('<td>Completed</td>')
+        }
         return listContent
+    }
+
+    function getIconStatusCode(sc) {
+        var icon = ""
+        switch (sc) {
+            case 10:
+                icon = "fa-hourglass-start";
+                break;
+            case 20:
+                icon = "fa-check";
+                break;
+            case 30:
+                icon = "fa-bicycle";
+                break;
+            case 40:
+                icon = "fa-flag-checkered";
+                break;
+            default:
+                icon = "fa-ban";
+                break;
+        }
+        return icon
     }
 
     function setupDetailCustomer(customerId = null) {
@@ -303,8 +387,8 @@
 
                 } else {
                     $('.title-nothing').empty()
-                    $('.ongoing-content').each(function (index, element) {
-                      $(element).attr('style', 'display: none !important');
+                    $('.ongoing-content').each(function(index, element) {
+                        $(element).attr('style', 'display: none !important');
                     })
                     ongoingParent.append("<h3 class='title-nothing'><center> Belum Ada apa apa :( </center></h3>")
                 }
@@ -314,7 +398,7 @@
 
     }
 
-    function getStringDate(date){
+    function getStringDate(date) {
         var month = new Array();
         month[0] = "January";
         month[1] = "February";
@@ -332,8 +416,9 @@
         var str2 = j.getDate() + " " + month[j.getMonth()] + " " + j.getFullYear() + " at " + j.getHours() + ":" + j.getMinutes()
         return str2
     }
+
     function loadListTable() {
-        var urlListCustomer = "<?php echo base_url("customer/show") ?>";
+        var urlListCustomer = "<?php echo base_url("transaction/show") ?>";
         $.get(urlListCustomer, function(result) {
             // console.log(result.content)  
             var data = result.content;

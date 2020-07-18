@@ -52,7 +52,7 @@
                             </div>
                         </li>
                         <li>
-                            <div class="nav-menu"><a href="#"><span class="fa fa-book "></span>Report</a></div>
+                            <div class="nav-menu"><a href="<?php echo base_url("report") ?>"><span class="fa fa-book "></span>Report</a></div>
                         </li>
                     </ul>
                     <img src="<?php echo base_url('assets/images/sidebar-icon.png') ?>" alt="" class="sidebar-icon">

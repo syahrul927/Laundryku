@@ -117,6 +117,8 @@ require_once "ParentControllerAdmin.php";
         $param->setTelp($req['telp']);
         return $param;
     }
+
     }
+
     
 ?>

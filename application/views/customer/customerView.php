@@ -198,7 +198,7 @@
     function actionStatus(e) {
         var urlUpdateStatus = "<?php echo base_url("transaction/update/status") ?>"
         var data = {
-            orderId: $(e).data('orderId'),
+            orderId: $(e).data('orderid'),
             statusCode: $(e).data('status')
         }
         swal({
@@ -228,7 +228,7 @@
                                 swal("Berhasil Mengupdate", {
                                     icon: "success",
                                 });
-                                setupDetailCustomer($(e).data('customerId'))
+                                setupDetailCustomer($(e).data('customerid'))
                             } else {
                                 swal("Failed", res.responseJSON.nessage, "error");
                             }
@@ -364,8 +364,8 @@
                         var ongoingContent = $('#ongoing-content').clone()
                         if (sc === 10 || sc === 20 || sc === 30) {
                             // console.log(ongoingContent.find(actionStatusTrans))
-                            ongoingContent.find(".actionStatusTrans").data('orderId', o.orderId)
-                            ongoingContent.find(".actionStatusTrans").data('customerId', o.customerId)
+                            ongoingContent.find(".actionStatusTrans").data('orderid', o.orderId)
+                            ongoingContent.find(".actionStatusTrans").data('customerid', o.customerId)
                             listComponent.push(ongoingContent)
                         } else {
                             listComponent2.push(ongoingContent)
@@ -455,7 +455,6 @@
         $.get(urlListCustomer, function(result) {
             // console.log(result.content)  
             var data = result.content;
-            listCustomerGlobal = data;
             var tbody = $('.my-tools');
             $(".my-tools tr").remove();
             $.each(data, (i, o) => {

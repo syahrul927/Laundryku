@@ -146,4 +146,24 @@ class Transaction extends ParentControllerAdmin
         $param->setExtraCost($req['extraCost']);
         return $param;
     }
+    
+    public function exportpdf(){
+
+        $req =  $this->requestBuilder();
+        $data['listTrans'] = $this->TransactionModel->getListTransaction($req['customerId'], $req['dateFrom'], $req['dateTo']);
+        // var_dump($data);
+        $this->load->library('pdf');
+    
+        $this->pdf->setPaper('A4', 'potrait');
+        $this->pdf->filename = "transaksi ".$data['listTrans'][0]->name."_".$req['dateFrom']."-".$req['dateTo'].".pdf";
+        $this->pdf->load_view('report', $data);
+    
+    
+    }
+    public function report(){
+        
+        $this->load->view('_part/header');
+        $this->load->view('report/reportForm');
+        $this->load->view('_part/footer');
+    }
 }
