@@ -71,7 +71,7 @@
             }
             $.post(urlSavePackage, JSON.stringify(data), null, "json").done((res) => {
                 // console.log(res)
-                console.log("palplapla")
+                // console.log("palplapla")
                 if (res.status === 200) {
                     swal("Success", "Berhasil Menambahkan Data", "success");
                     $('#exampleModal').modal('hide')

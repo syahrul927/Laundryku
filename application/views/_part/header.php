@@ -16,10 +16,7 @@
     <script src="<?php echo base_url('assets/js/sweetalert.min.js') ?>"></script>
     <link href="<?php echo base_url('assets/css/select2.min.css') ?>" rel="stylesheet" />
     <script src="<?php echo base_url('assets/js/select2.min.js') ?>"></script>
-    <script>
-        // // $.fn.modal.Constructor.prototype.enforceFocus = function() {};
-        // $.fn.modal.Constructor.prototype._enforceFocus = function() {};
-    </script>
+    
     <title>Home Page LaundryKu</title>
 </head>
 
@@ -31,7 +28,7 @@
                     <div class="title-sidebar">LaundryKu</div>
                     <ul>
                         <li>
-                            <div class="nav-menu"><a href="#"><span class="fa fa-home "></span>Dashboard</a></div>
+                            <div class="nav-menu"><a href="<?php echo base_url("dashboard") ?>"><span class="fa fa-home "></span>Dashboard</a></div>
                         </li>
                         <li>
                             <div class="nav-menu"><a href="#" class="feat-btn"><span class="fa fa-database" aria-hidden="true"></span>Master</a></div>
@@ -42,9 +39,6 @@
                                 <li>
                                     <div class="nav-menu"><a href="<?php echo base_url("package") ?>">Package</a></div>
                                 </li>
-                                <li>
-                                    <div class="nav-menu"><a href="#">User Admin</a></div>
-                                </li>
                             </ul>
                         </li>
                         <li>
@@ -52,7 +46,7 @@
                             </div>
                         </li>
                         <li>
-                            <div class="nav-menu"><a href="<?php echo base_url("report") ?>"><span class="fa fa-book "></span>Report</a></div>
+                            <div class="nav-menu"><a href="<?php echo base_url("transaction/report") ?>"><span class="fa fa-book "></span>Report</a></div>
                         </li>
                     </ul>
                     <img src="<?php echo base_url('assets/images/sidebar-icon.png') ?>" alt="" class="sidebar-icon">

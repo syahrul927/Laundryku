@@ -1,13 +1,16 @@
 <div class="col col-content">
-    <div class="row content-header">
+    <div class="row content-header" >
         <div class="col-sm">
-            <span class="page-title">Master Page</span>
+            <span class="page-title">Transaction Page</span>
         </div>
-        <div class="col-sm-3">
-            <a href="#">
-                <span class="user-acc"><?php echo $_SESSION['username'] ?></span>&nbsp;
-                <span class="fa fa-caret-down first"></span>
-            </a>
+        <div class="col-sm-3" style="padding-bottom: 30px;">
+            <div class="username" style="display: inline-block;">
+                <?php echo $_SESSION['username'] ?>
+            </div>
+            <a  style="display: inline-block; padding: 0px;" class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+            <div class="dropdown-menu" aria-labelledby="userDropdown">
+                <a class="dropdown-item dropdown-menu-left" href="#">Logout</a>
+            </div>
         </div>
     </div>
     <div class="row content-body">
@@ -199,6 +202,7 @@
 <script>
     var listCustomerGlobal = null
     var listPackageGlobal = null
+
     function actionStatus(e) {
         var urlUpdateStatus = "<?php echo base_url("transaction/update/status") ?>"
         var data = {
@@ -232,7 +236,7 @@
                                 swal("Berhasil Mengupdate", {
                                     icon: "success",
                                 });
-                                 loadListTable()
+                                loadListTable()
                             } else {
                                 swal("Failed", res.responseJSON.nessage, "error");
                             }
@@ -272,7 +276,7 @@
         var orderId = $('<td></td>').append(o.orderId);
         var name = $('<td></td>').append(o.name);
         var packageName = $('<td></td>').append(o.packageName);
-        var delivery = $('<td></td>').append(parseInt(o.delivery)===1?"Diantar":"Ambil Sendiri");
+        var delivery = $('<td></td>').append(parseInt(o.delivery) === 1 ? "Diantar" : "Ambil Sendiri");
         var createtm = $('<td></td>').append(o.createtm);
         var iconStatus = $('<span class="fa"></span>').addClass(getIconStatusCode(parseInt(o.statusCode)))
         var statusCode = $('<td></td>').append(iconStatus);
@@ -283,7 +287,7 @@
         listContent.append(createtm);
         listContent.append(statusCode);
         var s = parseInt(o.statusCode);
-        var isDelivery = parseInt(o.delivery)===1 ?'<a data-orderid=' + o.orderId + ' data-status="30" class="dropdown-item actionStatusTrans statusDelivery" href="#"  onclick="actionStatus(this)">Delivery</a>' :''
+        var isDelivery = parseInt(o.delivery) === 1 ? '<a data-orderid=' + o.orderId + ' data-status="30" class="dropdown-item actionStatusTrans statusDelivery" href="#"  onclick="actionStatus(this)">Delivery</a>' : ''
         if (s === 10 || s === 20 || s === 30) {
             listContent.append(
                 '<td class="tools">' +
@@ -292,11 +296,11 @@
                 '</a>' +
                 '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">' +
                 '<a data-orderid=' + o.orderId + ' data-status="20" class="dropdown-item actionStatusTrans statusDone" href="#"  onclick="actionStatus(this)">Done</a>' +
-                isDelivery+
+                isDelivery +
                 '<a data-orderid=' + o.orderId + ' data-status="40" class="dropdown-item actionStatusTrans statusFinish" href="#" onclick="actionStatus(this)">Finish</a>' +
                 '</div>' +
                 '</td>')
-        }else{
+        } else {
             listContent.append('<td>Completed</td>')
         }
         return listContent
@@ -531,8 +535,5 @@
         var json = JSON.stringify(values);
 
         alert(json);
-    });
-    $('.feat-btn').click(function() {
-        $('nav ul .feat-show').toggle("slow");
     });
 </script>

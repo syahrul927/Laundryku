@@ -3,11 +3,14 @@
         <div class="col-sm">
             <span class="page-title">Master Page</span>
         </div>
-        <div class="col-sm-3">
-            <a href="#">
-                <span class="user-acc"><?php echo $_SESSION['username'] ?></span>&nbsp;
-                <span class="fa fa-caret-down first"></span>
-            </a>
+        <div class="col-sm-3" style="padding-bottom: 30px;">
+            <div class="username" style="display: inline-block;">
+                <?php echo $_SESSION['username'] ?>
+            </div>
+            <a  style="display: inline-block; padding: 0px;" class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+            <div class="dropdown-menu" aria-labelledby="userDropdown">
+                <a class="dropdown-item dropdown-menu-left" href="#">Logout</a>
+            </div>
         </div>
     </div>
     <div class="row content-body">
@@ -565,8 +568,5 @@
         var json = JSON.stringify(values);
 
         alert(json);
-    });
-    $('.feat-btn').click(function() {
-        $('nav ul .feat-show').toggle("slow");
     });
 </script>
