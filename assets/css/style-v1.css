@@ -346,6 +346,7 @@ nav ul .feat-show.show {
 }
 
 nav ul li {
+  overflow-y: hidden;
   font-size: 12px;
   margin-left: 50px;
   line-height: 30px;
@@ -360,6 +361,7 @@ nav ul li .nav-menu {
 }
 
 nav ul li .nav-menu:hover {
+  overflow-y: hidden;
   -webkit-transform: scale(1.1);
           transform: scale(1.1);
   -webkit-transform-origin: top left;

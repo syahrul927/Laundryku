@@ -304,11 +304,13 @@ nav ul{
         display: block;
     }
     li{
+        overflow-y: hidden; 
         .nav-menu{
             transition:100ms;
             transform: scale(1);
             overflow-y: hidden; 
             &:hover{
+                overflow-y: hidden; 
                 transform: scale(1.1);
                 transform-origin: top left;
             }

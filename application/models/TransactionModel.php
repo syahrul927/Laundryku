@@ -38,6 +38,21 @@ class TransactionModel extends CI_Model
         return $this->db->get($this->tableName)->row_object();
     }
 
+    public function countTransactionByPackage(){
+        $this->db->select('package.packageName, count(ordertrans.orderId) total');
+        $this->db->join('package', 'package.packageId=ordertrans.packageId');
+        $this->db->group_by('ordertrans.packageId');        
+        return $this->db->get($this->tableName)->result();
+    }
+    public function countTransactionByMonth(){
+        $this->db->select('count(orderId) total, MONTHNAME(createtm) month');
+        $this->db->where('YEAR(createtm)', date("Y"));
+        $this->db->group_by('YEAR(createtm), MONTHNAME(createtm) ');    
+        $this->db->order_by('createtm', 'asc'); 
+        return $this->db->get($this->tableName)->result();   
+
+    }
+
     public function getListTransaction($customerId = null, $dateFrom = null, $dateTo = null)
     {
         $this->db->select('ordertrans.orderId, package.price, ordertrans.customerId, kasir.nama as namakasir, ordertrans.packageId, ordertrans.qty,ordertrans.total, ordertrans.kasirId, ordertrans.delivery,ordertrans.extraCost, ordertrans.statusCode, ordertrans.createtm, ordertrans.modifiedtm, customer.name, package.packageName');

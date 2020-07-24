@@ -9,7 +9,7 @@
             </div>
             <a  style="display: inline-block; padding: 0px;" class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
             <div class="dropdown-menu" aria-labelledby="userDropdown">
-                <a class="dropdown-item dropdown-menu-left" href="#">Logout</a>
+                <a class="dropdown-item dropdown-menu-left" href="<?= base_url('account/logout')?>">Logout</a>
             </div>
         </div>
     </div>

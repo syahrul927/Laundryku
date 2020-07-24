@@ -167,10 +167,14 @@ class Transaction extends ParentControllerAdmin
         $data['listTrans'] = $this->TransactionModel->getListTransaction($_POST['customerId'], $_POST['dateFrom'], $_POST['dateTo']);
         // var_dump($data);
         $this->load->library('pdf');
-
-        $this->pdf->setPaper('A4', 'potrait');
-        $this->pdf->filename = "transaksi " . $data['listTrans'][0]->name . "_" . $_POST['dateFrom'] . "-" . $_POST['dateTo'] . ".pdf";
-        $this->pdf->load_view('report/reportPdf', $data);
+        // Create new Spreadsheet object
+        if (empty($listTrans)) {
+            echo "Maaf tidak ada transaksi";
+        } else {
+            $this->pdf->setPaper('A4', 'potrait');
+            $this->pdf->filename = "transaksi " . $data['listTrans'][0]->name . "_" . $_POST['dateFrom'] . "-" . $_POST['dateTo'] . ".pdf";
+            $this->pdf->load_view('report/reportPdf', $data);
+        }
     }
     public function report()
     {
@@ -184,88 +188,92 @@ class Transaction extends ParentControllerAdmin
 
         $listTrans = $this->TransactionModel->getListTransaction($_POST['customerId'], $_POST['dateFrom'], $_POST['dateTo']);
         // Create new Spreadsheet object
-        $spreadsheet = new Spreadsheet();
-        $styleArray = [
-            'borders' => [
-                'allBorders' => [
-                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+        if (empty($listTrans)) {
+            echo "Maaf tidak ada transaksi";
+        } else {
+            $spreadsheet = new Spreadsheet();
+            $styleArray = [
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    ],
                 ],
-            ],
-        ];
+            ];
 
-        // Set document properties
-        $spreadsheet->getProperties()->setCreator('Andoyo - Java Web Media')
-            ->setLastModifiedBy('Andoyo - Java Web Medi')
-            ->setTitle('Office 2007 XLSX Test Document')
-            ->setSubject('Office 2007 XLSX Test Document')
-            ->setDescription('Test document for Office 2007 XLSX, generated using PHP classes.')
-            ->setKeywords('office 2007 openxml php')
-            ->setCategory('Test result file');
+            // Set document properties
+            $spreadsheet->getProperties()->setCreator('Andoyo - Java Web Media')
+                ->setLastModifiedBy('Andoyo - Java Web Medi')
+                ->setTitle('Office 2007 XLSX Test Document')
+                ->setSubject('Office 2007 XLSX Test Document')
+                ->setDescription('Test document for Office 2007 XLSX, generated using PHP classes.')
+                ->setKeywords('office 2007 openxml php')
+                ->setCategory('Test result file');
 
-        // Add some data
-        $spreadsheet->setActiveSheetIndex(0)
-            ->setCellValue('A1', 'Customer')
-            ->setCellValue('B1', $listTrans[0]->name)
-            ->setCellValue('A2', 'Kasir')
-            ->setCellValue('B2', $_SESSION['username'])
-            ->setCellValue('A3', 'Tanggal Dibuat')
-            ->setCellValue('B3', date('d-m-Y'));
-        $spreadsheet->setActiveSheetIndex(0)
-            ->setCellValue('A5', "Package")
-            ->setCellValue('B5', "Qty")
-            ->setCellValue('C5', "Tanggal Dibuat")
-            ->setCellValue('D5', "Cost Delivery")
-            ->setCellValue('E5', "Price")
-            ->setCellValue('F5', "Total");
-
-        // Miscellaneous glyphs, UTF-8
-        $i = 6;
-        $amount = 0;
-        foreach ($listTrans as $t) {
-
+            // Add some data
             $spreadsheet->setActiveSheetIndex(0)
-                ->setCellValue('A' . $i, $t->packageName)
-                ->setCellValue('B' . $i, $t->qty)
-                ->setCellValue('C' . $i, $t->createtm)
-                ->setCellValue('D' . $i, $t->extraCost)
-                ->setCellValue('E' . $i, $t->price)
-                ->setCellValue('F' . $i, $t->total);
-            $i++;
-            $amount += $t->total;
+                ->setCellValue('A1', 'Customer')
+                ->setCellValue('B1', $listTrans[0]->name)
+                ->setCellValue('A2', 'Kasir')
+                ->setCellValue('B2', $_SESSION['username'])
+                ->setCellValue('A3', 'Tanggal Dibuat')
+                ->setCellValue('B3', date('d-m-Y'));
+            $spreadsheet->setActiveSheetIndex(0)
+                ->setCellValue('A5', "Package")
+                ->setCellValue('B5', "Qty")
+                ->setCellValue('C5', "Tanggal Dibuat")
+                ->setCellValue('D5', "Cost Delivery")
+                ->setCellValue('E5', "Price")
+                ->setCellValue('F5', "Total");
+
+            // Miscellaneous glyphs, UTF-8
+            $i = 6;
+            $amount = 0;
+            foreach ($listTrans as $t) {
+
+                $spreadsheet->setActiveSheetIndex(0)
+                    ->setCellValue('A' . $i, $t->packageName)
+                    ->setCellValue('B' . $i, $t->qty)
+                    ->setCellValue('C' . $i, $t->createtm)
+                    ->setCellValue('D' . $i, $t->extraCost)
+                    ->setCellValue('E' . $i, $t->price)
+                    ->setCellValue('F' . $i, $t->total);
+                $i++;
+                $amount += $t->total;
+            }
+            $total = $i + 1;
+            $spreadsheet->setActiveSheetIndex(0)
+                ->mergeCells("A" . $total . ":E" . $total)->setCellValue("A" . $total, "Total")
+                ->setCellValue("F" . $total, $amount);
+
+            $spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+            $spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+            $spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+            $spreadsheet->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+            $spreadsheet->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
+            $spreadsheet->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
+            // Rename worksheet
+            $spreadsheet->getActiveSheet()->setTitle('Report Excel ' . date('d-m-Y H'));
+
+            $spreadsheet->setActiveSheetIndex(0)->getStyle('A5:F' . $total)->applyFromArray($styleArray);
+            // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+            $spreadsheet->setActiveSheetIndex(0);
+
+            // Redirect output to a client’s web browser (Xlsx)
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="Report Excel.xlsx"');
+            header('Cache-Control: max-age=0');
+            // If you're serving to IE 9, then the following may be needed
+            header('Cache-Control: max-age=1');
+
+            // If you're serving to IE over SSL, then the following may be needed
+            header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+            header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+            header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+            header('Pragma: public'); // HTTP/1.0
+
+            $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+            $writer->save('php://output');
+            exit;
         }
-        $total = $i + 1;
-        $spreadsheet->setActiveSheetIndex(0)
-            ->mergeCells("A" . $total . ":E" . $total)->setCellValue("A" . $total, "Total")
-            ->setCellValue("F" . $total, $amount);
-
-        $spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
-        // Rename worksheet
-        $spreadsheet->getActiveSheet()->setTitle('Report Excel ' . date('d-m-Y H'));
-
-        $spreadsheet->setActiveSheetIndex(0)->getStyle('A5:F' . $total)->applyFromArray($styleArray);
-        // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-        $spreadsheet->setActiveSheetIndex(0);
-
-        // Redirect output to a client’s web browser (Xlsx)
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="Report Excel.xlsx"');
-        header('Cache-Control: max-age=0');
-        // If you're serving to IE 9, then the following may be needed
-        header('Cache-Control: max-age=1');
-
-        // If you're serving to IE over SSL, then the following may be needed
-        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
-        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
-        header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
-        header('Pragma: public'); // HTTP/1.0
-
-        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-        $writer->save('php://output');
-        exit;
     }
 }

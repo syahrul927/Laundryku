@@ -45,7 +45,7 @@ class Account extends CI_Controller {
 					'username' => $userid
 			);
 			$this->session->set_userdata($data_session);
-			redirect(base_url('customer'));
+			redirect(base_url('dashboard'));
 		}
 		else{
 			?>
@@ -59,6 +59,9 @@ class Account extends CI_Controller {
 	}
 	public function logout(){
 		session_destroy();
+		redirect(base_url('account/login'));
+
 	}
+
 }
 ?>

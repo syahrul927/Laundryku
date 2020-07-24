@@ -14,7 +14,7 @@
             </div>
             <a style="display: inline-block; padding: 0px;" class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
             <div class="dropdown-menu" aria-labelledby="userDropdown">
-                <a class="dropdown-item dropdown-menu-left" href="#">Logout</a>
+                <a class="dropdown-item dropdown-menu-left" href="<?= base_url('account/logout')?>">Logout</a>
             </div>
         </div>
     </div>
@@ -57,7 +57,7 @@
                             <!-- Text -->
                             <p class="card-text">Total Customer</p>
                             <div class="d-flex justify-content-between">
-                                <p class="display-1">23</p>
+                                <p class="display-1" id="totalCustomer">23</p>
                                 <!-- <i class="fas fa-sun-o fa-5x pt-3 amber-text"></i> -->
                             </div>
                             <div class="collapse-content">
@@ -90,7 +90,7 @@
                                             <tr>
                                                 <td class="font-weight-normal align-middle">Markona</td>
                                                 <td class="float-right font-weight-normal">
-                                                    <p class="mb-1">24-02-2020</span></p>
+                                                    <p class="mb-1">24-02-2020</p>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -115,78 +115,51 @@
 </div>
 
 <script>
-    var json = {
-        "totalCustomer": 23,
-        "recentCustomer": [{
-                "name": "Markona",
-                "createdtm": "24-02-2020"
-            },
-            {
-                "name": "Syahrul",
-                "createdtm": "22-02-2020"
-            },
-            {
-                "name": "Popol",
-                "createdtm": "24-02-2020"
-            }
-        ],
-        "transactionPackage": [{
-                "packageName": "paket cuci baju Hebat 1",
-                "total": 29
-            },
-            {
-                "packageName": "Paket Hemat",
-                "total": 23
-            },
-            {
-                "packageName": "paket karpet",
-                "total": 93
-            },
-            {
-                "packageName": "paket cuci mobil",
-                "total": 53
-            },
-            {
-                "packageName": "paket cuci motor",
-                "total": 41
-            },
-            {
-                "packageName": "paket cuci mata",
-                "total": 14
-            }
-        ],
-        "transactionMonth": [{
-                "total": 47,
-                "month": "Januari"
-            },
-            {
-                "total": 53,
-                "month": "Februari"
-            },
-            {
-                "total": 32,
-                "month": "Maret"
-            }
-        ]
-    }
+    //dummy data
+    var json = null
     $(document).ready(function() {
-        createPie()
-        createBar()
+        getDataDashboard()
     })
+    function setRecentCustomer(){
+        $('#totalCustomer').empty().append(json.totalCustomer)
+        var tbody = $('tbody').empty()
+        $.each(json.recentCustomer, (i,o)=>{
+            var tr = $('<tr></tr>')
+            var td1 = $('<td class="font-weight-normal align-middle"></td>')
+            var td2 = $('<td class="float-right font-weight-normal"></td>')
+            var p = $('<p class="mb-1"></p>')
+            p.append(o.createtm)
+            td2.append(p)
+            td1.append(o.name)
+            tr.append(td1)
+            tr.append(td2)
+            tbody.append(tr)
+        })
+    }
+
+    function getDataDashboard() {
+        $.get("<?php echo base_url('dashboard/info') ?>").done(function(res) {
+            json = res
+            createPie()
+            createBar()
+            setRecentCustomer()
+        })
+    }
 
     function createPie() {
         var label = []
         var data = []
         var backgroundColor = []
         var hover = []
-        console.log(json)
+        // console.log(json)
         $.each(json.transactionPackage, function(i, o) {
-            console.log(o)
-            data.push(o.total)
+            // console.log(o)
+            data.push(parseInt(o.total))
             backgroundColor.push(materialColor())
             hover.push("#595f69")
             label.push(o.packageName)
         })
+        // console.log(data)
         var ctxP = document.getElementById("labelChart").getContext('2d');
         var myPieChart = new Chart(ctxP, {
             plugins: [ChartDataLabels],
@@ -245,30 +218,27 @@
 
 
     function createBar() {
+        var label = []
+        var data = []
+        var backgroundColor = []
+        var hover = []
+        // console.log(json)
+        $.each(json.transactionMonth, function(i, o) {
+            // console.log(o)
+            data.push(parseInt(o.total))
+            backgroundColor.push(materialColor())
+            hover.push("#595f69")
+            label.push(o.month)
+        })
         var ctxB = document.getElementById("barChart").getContext('2d');
         var myBarChart = new Chart(ctxB, {
             type: 'bar',
             data: {
-                labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+                labels: label,
                 datasets: [{
                     label: '# Jumlah Transaksi dalam sebulan',
-                    data: [12, 19, 3, 5, 2, 3],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255,99,132,1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
+                    data: data,
+                    backgroundColor: backgroundColor,
                     borderWidth: 1
                 }]
             },
@@ -406,23 +376,23 @@
                 "a400": "#00b0ff",
                 "a700": "#0091ea"
             },
-            "cyan": {
-                "50": "#e0f7fa",
-                "100": "#b2ebf2",
-                "200": "#80deea",
-                "300": "#4dd0e1",
-                "400": "#26c6da",
-                "500": "#00bcd4",
-                "600": "#00acc1",
-                "700": "#0097a7",
-                "800": "#00838f",
-                "900": "#006064",
-                "hex": "#00bcd4",
-                "a100": "#84ffff",
-                "a200": "#18ffff",
-                "a400": "#00e5ff",
-                "a700": "#00b8d4"
-            },
+            // "cyan": {
+            //     "50": "#e0f7fa",
+            //     "100": "#b2ebf2",
+            //     "200": "#80deea",
+            //     "300": "#4dd0e1",
+            //     "400": "#26c6da",
+            //     "500": "#00bcd4",
+            //     "600": "#00acc1",
+            //     "700": "#0097a7",
+            //     "800": "#00838f",
+            //     "900": "#006064",
+            //     "hex": "#00bcd4",
+            //     "a100": "#84ffff",
+            //     "a200": "#18ffff",
+            //     "a400": "#00e5ff",
+            //     "a700": "#00b8d4"
+            // },
             "teal": {
                 "50": "#e0f2f1",
                 "100": "#b2dfdb",
@@ -474,40 +444,40 @@
                 "a400": "#76ff03",
                 "a700": "#64dd17"
             },
-            "lime": {
-                "50": "#f9fbe7",
-                "100": "#f0f4c3",
-                "200": "#e6ee9c",
-                "300": "#dce775",
-                "400": "#d4e157",
-                "500": "#cddc39",
-                "600": "#c0ca33",
-                "700": "#afb42b",
-                "800": "#9e9d24",
-                "900": "#827717",
-                "hex": "#cddc39",
-                "a100": "#f4ff81",
-                "a200": "#eeff41",
-                "a400": "#c6ff00",
-                "a700": "#aeea00"
-            },
-            "yellow": {
-                "50": "#fffde7",
-                "100": "#fff9c4",
-                "200": "#fff59d",
-                "300": "#fff176",
-                "400": "#ffee58",
-                "500": "#ffeb3b",
-                "600": "#fdd835",
-                "700": "#fbc02d",
-                "800": "#f9a825",
-                "900": "#f57f17",
-                "hex": "#ffeb3b",
-                "a100": "#ffff8d",
-                "a200": "#ffff00",
-                "a400": "#ffea00",
-                "a700": "#ffd600"
-            },
+            // "lime": {
+            //     "50": "#f9fbe7",
+            //     "100": "#f0f4c3",
+            //     "200": "#e6ee9c",
+            //     "300": "#dce775",
+            //     "400": "#d4e157",
+            //     "500": "#cddc39",
+            //     "600": "#c0ca33",
+            //     "700": "#afb42b",
+            //     "800": "#9e9d24",
+            //     "900": "#827717",
+            //     "hex": "#cddc39",
+            //     "a100": "#f4ff81",
+            //     "a200": "#eeff41",
+            //     "a400": "#c6ff00",
+            //     "a700": "#aeea00"
+            // },
+            // "yellow": {
+            //     "50": "#fffde7",
+            //     "100": "#fff9c4",
+            //     "200": "#fff59d",
+            //     "300": "#fff176",
+            //     "400": "#ffee58",
+            //     "500": "#ffeb3b",
+            //     "600": "#fdd835",
+            //     "700": "#fbc02d",
+            //     "800": "#f9a825",
+            //     "900": "#f57f17",
+            //     "hex": "#ffeb3b",
+            //     "a100": "#ffff8d",
+            //     "a200": "#ffff00",
+            //     "a400": "#ffea00",
+            //     "a700": "#ffd600"
+            // },
             "amber": {
                 "50": "#fff8e1",
                 "100": "#ffecb3",
@@ -600,9 +570,6 @@
             },
             "black": {
                 "hex": "#000000"
-            },
-            "white": {
-                "hex": "#ffffff"
             }
         }
         // pick random property

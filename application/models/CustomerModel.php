@@ -22,7 +22,15 @@ class CustomerModel extends CI_Model
         return $this->db->get($this->tableName)->result();
     }
 
-    
+    public function getLastRegister(){
+        
+        $this->db->order_by('createtm', 'DESC');
+        $this->db->limit(5);
+        return $this->db->get($this->tableName)->result();
+    }
+    public function countTotalUser(){
+        return $this->db->count_all_results($this->tableName);
+    }
     public function deleteCustomerById($id){
         $criteria = array(
             'customerId'=>$id

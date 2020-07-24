@@ -7,9 +7,9 @@
             <div class="username" style="display: inline-block;">
                 <?php echo $_SESSION['username'] ?>
             </div>
-            <a  style="display: inline-block; padding: 0px;" class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+            <a style="display: inline-block; padding: 0px;" class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
             <div class="dropdown-menu" aria-labelledby="userDropdown">
-                <a class="dropdown-item dropdown-menu-left" href="#">Logout</a>
+                <a class="dropdown-item dropdown-menu-left" href="<?= base_url('account/logout')?>">Logout</a>
             </div>
         </div>
     </div>
@@ -96,8 +96,8 @@
                                             <i class="fa  fa-fw"></i>
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                                            <a data-id="" data-status="20" class="dropdown-item actionStatusTrans statusDone" href="#"  onclick="actionStatus(this)">Done</a>
-                                            <a data-id="" data-status="30" class="dropdown-item actionStatusTrans statusDelivery" href="#"  onclick="actionStatus(this)">Delivery</a>
+                                            <a data-id="" data-status="20" class="dropdown-item actionStatusTrans statusDone" href="#" onclick="actionStatus(this)">Done</a>
+                                            <a data-id="" data-status="30" class="dropdown-item actionStatusTrans statusDelivery" href="#" onclick="actionStatus(this)">Delivery</a>
                                             <a data-id="" data-status="40" class="dropdown-item actionStatusTrans statusFinish" href="#" onclick="actionStatus(this)">Finish</a>
                                         </div>
                                     </div>
@@ -290,7 +290,7 @@
             '<div class="btn-tools btn-edit"><a href="#" data-id=' + o.customerId + ' data-toggle="modal" data-target="#exampleModal"><span class="fa fa-pencil-square-o"></span></a></div>&nbsp;' +
             '<div class="btn-tools btn-delete"><a href="#" data-id=' + o.customerId + '><span class="fa fa-trash"></span></a>' +
             '</div>' +
-            '<div class="btn-tools btn-view"><a href="#" data-customerName='+o.name+' data-id=' + o.customerId + '><span class="fa fa-eye"></span></a></div>' +
+            '<div class="btn-tools btn-view"><a href="#" data-customerName=' + o.name + ' data-id=' + o.customerId + '><span class="fa fa-eye"></span></a></div>' +
             '</td>'
         )
         return listContent
@@ -473,7 +473,7 @@
                 var customerName = $(this).data('customername')
                 var pat = $('.detail-customer')
                 console.log($(this).data())
-                $('.detail-title').empty().prepend(customerName+'\'s Transaction')
+                $('.detail-title').empty().prepend(customerName + '\'s Transaction')
                 // $('.detail-customer').append("<h1>" + customerId + "</h1>").slideToggle("slow");
                 if (pat.is(":visible")) {
                     pat.slideToggle("slow")
