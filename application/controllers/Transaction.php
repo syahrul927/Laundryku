@@ -168,7 +168,7 @@ class Transaction extends ParentControllerAdmin
         // var_dump($data);
         $this->load->library('pdf');
         // Create new Spreadsheet object
-        if (empty($listTrans)) {
+        if (empty($data['listTrans'])) {
             echo "Maaf tidak ada transaksi";
         } else {
             $this->pdf->setPaper('A4', 'potrait');
